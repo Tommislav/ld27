@@ -22,6 +22,7 @@ class BombSystem extends Sys
 	
 	private var _lastTick:Int;
 	
+	
 	private var _tf:TextField;
 	
 	public function new() 
@@ -42,47 +43,62 @@ class BombSystem extends Sys
 		super.onAdded(sm, em);
 		_touch = em.getComp(TouchComp);
 		_sys = em.getComp(SystemComp);
-		_sys.timeLeft = 10 * 1000;
 		
 		addListener(GameEvent.LEVEL_START, onLevelStart);
+		addListener(GameEvent.LEVEL_EXIT, onLevelExit);
 	}
 	
 	override public function onRemoved():Void 
 	{
 		super.onRemoved();
 		removeListener(GameEvent.LEVEL_START, onLevelStart);
+		removeListener(GameEvent.LEVEL_EXIT, onLevelExit);
 	}
 	
 	private function onLevelStart(e:GameEvent):Void 
 	{
 		_sys.timeLeft = 10 * 1000;
+		_sys.bombHasExploded = false;
+	}
+	
+	private function onLevelExit(e:GameEvent):Void 
+	{
+		
 	}
 	
 	override public function tick(gt:GameTime):Void 
 	{
-		super.tick(gt);
-		
 		if (!_touch.isTouching) {
-			// count down
-			
-			var now = Lib.getTimer();
-			if (_lastTick > -1) {
-				var delta = now - _lastTick;
-				_sys.timeLeft -= delta;
-				
-				
-				
-				if (_sys.timeLeft < 0) {
-					// BOOM
-					dispatch(new GameEvent(GameEvent.BOMB_EXPLODE));
-				}
-			}
-			
-			_lastTick = now;
+			if (_sys.bombHasExploded) {
+				floodfillFire();
+			} else {
+				checkBombCountdown();
+			}	
 		} else {
 			_lastTick = -1;
 		}
 		
 		_tf.text = ("" + Math.floor(_sys.timeLeft / 1000));
+	}
+	
+	private function checkBombCountdown() 
+	{
+		var now = Lib.getTimer();
+		if (_lastTick > -1) {
+			var delta = now - _lastTick;
+			_sys.timeLeft -= delta;
+			
+			if (_sys.timeLeft < 0) {
+				// BOOM
+				_sys.bombHasExploded = true;
+				dispatch(new GameEvent(GameEvent.BOMB_EXPLODE));
+			}
+		}
+		_lastTick = now;
+	}
+	
+	private function floodfillFire()
+	{
+		
 	}
 }

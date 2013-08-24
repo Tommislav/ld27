@@ -23,6 +23,8 @@ class LevelSystem extends Sys
 
 	private var _systemComp:SystemComp;
 	private var _levelComp:LevelComp;
+	private var _nextLevelCountdown:Int;
+	private var _levelRunning:Bool;
 	
 	override public function onAdded(sm, em):Void 
 	{
@@ -36,6 +38,7 @@ class LevelSystem extends Sys
 	
 	private function onStartNewLevel(e:StartNewLevelEvent):Void 
 	{
+		_levelRunning = true;
 		
 		var camera:CameraComp = em().getComp(CameraComp);
 		var levelNum:Int = e.currentLevel;
@@ -115,16 +118,26 @@ class LevelSystem extends Sys
 	
 	override public function tick(gt:GameTime):Void 
 	{
-		if (_systemComp.playersRescued == _systemComp.numPlayers) {
-			GameConsole.log("Start next level!!");
-			
-			// Level completed
-			dispatch(new GameEvent(GameEvent.LEVEL_EXIT));
-			
-			// start next level (here we'll probably want to show a hint or something)
-			var nextLevelId:Int = _levelComp.levelId + 1;
-			dispatch(new StartNewLevelEvent(StartNewLevelEvent.NEW_LEVEL, nextLevelId));
+		if (_levelRunning) {
+			if (_systemComp.playersRescued == _systemComp.numPlayers) {
+				GameConsole.log("Start next level!!");
+				
+				// Level completed
+				dispatch(new GameEvent(GameEvent.LEVEL_EXIT));
+				
+				_levelRunning = false;
+				_nextLevelCountdown = 60;
+			}
+		} else {
+			if (--_nextLevelCountdown <= 0) {
+				// start next level (here we'll probably want to show a hint or something)
+				var nextLevelId:Int = _levelComp.levelId + 1;
+				dispatch(new StartNewLevelEvent(StartNewLevelEvent.NEW_LEVEL, nextLevelId));
+			}
 		}
+		
+		
+		
 		
 	}
 }

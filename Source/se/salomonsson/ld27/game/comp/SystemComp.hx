@@ -19,6 +19,8 @@ class SystemComp implements IComponent
 	public var playersDead:Int;
 	public var playersRescued:Int;
 	
+	public var bombHasExploded:Bool;
+	
 	public function new() {}
 	
 }
