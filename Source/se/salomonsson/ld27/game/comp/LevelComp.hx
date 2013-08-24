@@ -8,7 +8,9 @@ import se.salomonsson.seagal.core.IComponent;
  */
 class LevelComp implements IComponent
 {
+	public var levelId:Int;
 	public var map:PixelMapParser;
+	public var floor:PixelMapParser;
 
 	public function new() {}
 }

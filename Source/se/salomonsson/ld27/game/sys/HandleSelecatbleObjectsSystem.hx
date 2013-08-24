@@ -14,7 +14,9 @@ import se.salomonsson.seagal.core.GameTime;
 import se.salomonsson.seagal.core.Sys;
 
 /**
- * ...
+ * Listens for clicks and checks if a selectable object was selected.
+ * If a selectable object is currently selected and we are dragging the
+ * mouse we update the path for that object
  * @author Tommislav
  */
 class HandleSelecatbleObjectsSystem extends Sys
@@ -47,13 +49,16 @@ class HandleSelecatbleObjectsSystem extends Sys
 		// update tile-coordinates for all selectable components!
 		updateSelectionCoordinates(selectables);
 		
-		if (_touchComp.isTouching) {
-			if (_touchComp.touchTick == gt.get_tick()) {
+		if (_touchComp.isTouching) { // we are clicking
+			
+			if (_touchComp.touchTick == gt.get_tick()) { // we started clicking this tick, check for new objects to select
 				
-				// DOWN! Check if we are selecting our guy
 				_selected = findSelectedSprite(selectables);
-				if (_selected != null)
+				if (_selected != null) {
+					_selected.comp(SelectableComp).selectedPath = new Array<Point>(); // reset any paths this guy might have...
 					_touchComp.selected = _selected.getEntity();
+					
+				}
 			}
 		} else {
 			_selected = null;
@@ -86,12 +91,13 @@ class HandleSelecatbleObjectsSystem extends Sys
 		for (ent in selectables) {
 			var sel:SelectableComp = ent.comp(SelectableComp);
 			if (sel.currentTileX == _touchComp.selectedTileX && sel.currentTileY == _touchComp.selectedTileY) {
-				sel.selectedPath = new Array<Point>();
 				return ent;
 			}
 		}
 		return null;
 	}
+	
+	
 	
 	function drawPath() 
 	{
@@ -104,10 +110,11 @@ class HandleSelecatbleObjectsSystem extends Sys
 			path.push(new Point(_touchComp.selectedTileX, _touchComp.selectedTileY));
 			GameConsole.log("Path: " + path);
 		}
-		
+		/*
 		var level:LevelComp = em().getComp(LevelComp);
 		for (i in 0...path.length) {
 			level.map.setOverrideValueAtCoord(Std.int(path[i].x), Std.int(path[i].y), TileSheetFactory.FLOOR_SELECTED);
 		}
+		*/
 	}
 }

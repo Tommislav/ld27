@@ -72,7 +72,9 @@ class LD27RenderSystem extends Sys
 			_touchComp = em().getComp(TouchComp);
 		
 		var cam:CameraComp = em().getComp(CameraComp);
-		var map:PixelMapParser = em().getComp(LevelComp).map;
+		var level:LevelComp = em().getComp(LevelComp);
+		var map = level.map;
+		
 		
 		var scale:Float = 1.0;
 		
@@ -95,11 +97,12 @@ class LD27RenderSystem extends Sys
 			for (x in 0..._systemComp.tileW) {
 				
 				var tileValue:Int = map.atCoord(_tileStartX + x, _tileStartY + y);
+				var floorTile:Int = level.floor.atCoord(_tileStartX + x, _tileStartY + y);
 				
 				// floor
 				_tileArray.push((x * 64) - _offX);
 				_tileArray.push((y * 64) - _offY);
-				_tileArray.push(getFloorTile(tileValue));
+				_tileArray.push(floorTile);
 				_tileArray.push(scale);
 				
 				if (tileValue == 0) {
@@ -128,18 +131,12 @@ class LD27RenderSystem extends Sys
 		_sheet.drawTiles(_canvas, _tileArray, false, Tilesheet.TILE_SCALE);
 		
 		
+		// Draw touch circle if touching
 		if (_touchComp.isTouching) {
 			_canvas.beginFill(0x3e8bff, 0.3);
 			_canvas.drawCircle(_touchComp.touchX, _touchComp.touchY, POINTER_SIZE);
 			_canvas.endFill();
 		}
-	}
-	
-	private function getFloorTile(tileValue:Int):Int {
-		if (tileValue == TileSheetFactory.FLOOR_SELECTED) {
-			return tileValue;
-		}
-		return TileSheetFactory.FLOOR_REGULAR;
 	}
 	
 	private function aboveZero(val:Float, range:Float):Float {

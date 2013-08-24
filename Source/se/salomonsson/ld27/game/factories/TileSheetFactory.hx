@@ -26,7 +26,7 @@ class TileSheetFactory
 		
 		sheet.addTileRect(new Rectangle(64*0, 64*0, TILE_WIDTH, TILE_HEIGHT));		// floor
 		sheet.addTileRect(new Rectangle(64 * 0, 64 * 1, TILE_WIDTH, TILE_HEIGHT));	// path
-		sheet.addTileRect(new Rectangle(64 * 0, 64 * 3, TILE_WIDTH, TILE_HEIGHT));	// invalid
+		sheet.addTileRect(new Rectangle(64 * 0, 64 * 2, TILE_WIDTH, TILE_HEIGHT));	// invalid
 		
 		sheet.addTileRect(new Rectangle(64 * 1, 64 * 0, TILE_WIDTH, TILE_HEIGHT));	// stone
 		

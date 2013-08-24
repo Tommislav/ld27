@@ -1,5 +1,4 @@
 package se.salomonsson.ld27;
-import flash.display.DisplayObjectContainer;
 import flash.display.Sprite;
 import flash.events.Event;
 import flash.Lib;
@@ -7,12 +6,12 @@ import se.salomonsson.ld27.game.comp.CameraComp;
 import se.salomonsson.ld27.game.comp.LevelComp;
 import se.salomonsson.ld27.game.comp.SystemComp;
 import se.salomonsson.ld27.game.comp.TouchComp;
-import se.salomonsson.ld27.game.factories.SpriteFactory;
 import se.salomonsson.ld27.game.sys.HandleSelecatbleObjectsSystem;
 import se.salomonsson.ld27.game.sys.LD27RenderSystem;
 import se.salomonsson.ld27.game.sys.LevelSystem;
 import se.salomonsson.ld27.game.sys.ScrollSystem;
 import se.salomonsson.ld27.game.sys.TouchSystem;
+import se.salomonsson.ld27.game.sys.UpdateFloorRenderDataSystem;
 import se.salomonsson.seagal.core.Core;
 
 /**
@@ -39,12 +38,15 @@ class GameScreen extends Sprite
 			.addComponent(new LevelComp());
 		
 		
-		_core.addSystem(new TouchSystem(), 4);
+		_core.addSystem(new TouchSystem(), 5);
 		
-		_core.addSystem(new LevelSystem(), 3);
-		_core.addSystem(new HandleSelecatbleObjectsSystem(), 3);
+		_core.addSystem(new LevelSystem(), 4);
+		_core.addSystem(new HandleSelecatbleObjectsSystem(), 4);
 		
-		_core.addSystem(new ScrollSystem(), 2);
+		_core.addSystem(new ScrollSystem(), 3);
+		
+		_core.addSystem(new UpdateFloorRenderDataSystem(), 2);
+		
 		_core.addSystem(new LD27RenderSystem(graphics), 1);
 		
 		addEventListener(Event.ENTER_FRAME, onEF);
