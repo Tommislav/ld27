@@ -94,13 +94,15 @@ class LD27RenderSystem extends Sys
 		for (y in 0..._systemComp.tileH) {
 			for (x in 0..._systemComp.tileW) {
 				
+				var tileValue:Int = map.atCoord(_tileStartX + x, _tileStartY + y);
+				
 				// floor
 				_tileArray.push((x * 64) - _offX);
 				_tileArray.push((y * 64) - _offY);
-				_tileArray.push(getFloorTile(map, x, y));
+				_tileArray.push(getFloorTile(tileValue));
 				_tileArray.push(scale);
 				
-				if (map.atCoord(_tileStartX + x, _tileStartY + y) == 0) {
+				if (tileValue == 0) {
 					// wall
 					
 					_tileArray.push((x * 64) - _offX);
@@ -133,10 +135,9 @@ class LD27RenderSystem extends Sys
 		}
 	}
 	
-	private function getFloorTile(map:PixelMapParser, x, y):Int {
-		var v = map.atCoord(x, y);
-		if (v == TileSheetFactory.FLOOR_SELECTED) {
-			return v;
+	private function getFloorTile(tileValue:Int):Int {
+		if (tileValue == TileSheetFactory.FLOOR_SELECTED) {
+			return tileValue;
 		}
 		return TileSheetFactory.FLOOR_REGULAR;
 	}
