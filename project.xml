@@ -1,14 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <project>
 	
-	<meta title="Ld27" package="com.example.ld27" version="1.0.0" company="se.salomonsson.ld27" />
-	<app main="Main" path="Export" file="Ld27" />
+	<meta 
+		title="Ld27" 
+		package="se.salomonsson.ld27" 
+		version="1.0.0" 
+		company="salomonsson.se" />
+		
+	<app 
+		main="se.salomonsson.ld27.LD27" 
+		path="Export" 
+		file="Ld27" />
+	
+	<window width="600" height="800" background="#FFFFFF" fps="60" if="flash"/>
+	<window background="#FFFFFF" fps="60" unless="flash"/>
+	<!--<window orientation="portrait" vsync="true" antialiasing="0" />-->
 	
 	<source path="Source" />
+	<!-- TEMPORARY! -->
+	<source path="../seagal/src" />
 	
 	<haxelib name="openfl" />
+	<haxelib name="tilelayer" />
+	<haxelib name="actuate" />
+	<haxelib name="gameconsole" />
 	
 	<assets path="Assets" rename="assets" exclude="openfl.svg" />
 	<icon path="Assets/openfl.svg" />
-	
 </project>
