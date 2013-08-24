@@ -23,6 +23,7 @@ class HandleSelecatbleObjectsSystem extends Sys
 {
 	private var _touchComp:TouchComp;
 	private var _selected:EW;
+	private var _validPath:Bool;
 
 	public function new() 
 	{
@@ -78,6 +79,8 @@ class HandleSelecatbleObjectsSystem extends Sys
 		comp.moveToX = -1;
 		comp.moveToY = -1;
 		comp.selectedPath = new Array<Point>();
+		
+		_validPath = true;
 	}
 	
 	function updateSelectionCoordinates(selectables:Array<EW>) 
@@ -95,7 +98,9 @@ class HandleSelecatbleObjectsSystem extends Sys
 		for (ent in selectables) {
 			var sel:SelectableComp = ent.comp(SelectableComp);
 			if (sel.currentTileX == _touchComp.selectedTileX && sel.currentTileY == _touchComp.selectedTileY) {
-				return ent;
+				if (sel.isSelectable) {
+					return ent;
+				}
 			}
 		}
 		return null;

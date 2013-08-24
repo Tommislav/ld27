@@ -2,10 +2,14 @@ package se.salomonsson.ld27;
 import flash.display.Sprite;
 import flash.events.Event;
 import flash.Lib;
+import openfl.Assets;
 import se.salomonsson.ld27.game.comp.CameraComp;
 import se.salomonsson.ld27.game.comp.LevelComp;
 import se.salomonsson.ld27.game.comp.SystemComp;
 import se.salomonsson.ld27.game.comp.TouchComp;
+import se.salomonsson.ld27.game.event.StartNewLevelEvent;
+import se.salomonsson.ld27.game.factories.TileSheetFactory;
+import se.salomonsson.ld27.game.sys.BombSystem;
 import se.salomonsson.ld27.game.sys.HandleSelecatbleObjectsSystem;
 import se.salomonsson.ld27.game.sys.LD27RenderSystem;
 import se.salomonsson.ld27.game.sys.LevelSystem;
@@ -36,11 +40,12 @@ class GameScreen extends Sprite
 			.addComponent(getSystemComp())
 			.addComponent(new TouchComp())
 			.addComponent(new CameraComp())
-			.addComponent(new LevelComp());
+			.addComponent(getLevelComponentWithTileSheet());
 		
 		
 		_core.addSystem(new TouchSystem(), 5);
 		
+		_core.addSystem(new BombSystem(), 4);
 		_core.addSystem(new LevelSystem(), 4);
 		_core.addSystem(new HandleSelecatbleObjectsSystem(), 4);
 		
@@ -50,6 +55,9 @@ class GameScreen extends Sprite
 		_core.addSystem(new UpdateFloorRenderDataSystem(), 2);
 		
 		_core.addSystem(new LD27RenderSystem(graphics), 1);
+		
+		
+		_core.dispatch(new StartNewLevelEvent(StartNewLevelEvent.NEW_LEVEL, 1));
 		
 		addEventListener(Event.ENTER_FRAME, onEF);
 	}
@@ -61,6 +69,12 @@ class GameScreen extends Sprite
 		sys.tileW = Math.ceil(sys.vpWidth / 64) + 1;
 		sys.tileH = Math.ceil(sys.vpHeight / 64) + 1;
 		return sys;
+	}
+	
+	private function getLevelComponentWithTileSheet() {
+		var lvl:LevelComp = new LevelComp();
+		lvl.sheet = TileSheetFactory.buildTileSheet(Assets.getBitmapData("assets/spritesheet.png"));
+		return lvl;
 	}
 	
 	private function onEF(e:Event):Void 

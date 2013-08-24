@@ -16,6 +16,7 @@ import se.salomonsson.ld27.game.comp.PosComp;
 import se.salomonsson.ld27.game.comp.SpriteComp;
 import se.salomonsson.ld27.game.comp.SystemComp;
 import se.salomonsson.ld27.game.comp.TouchComp;
+import se.salomonsson.ld27.game.event.GameEvent;
 import se.salomonsson.ld27.game.factories.SpriteFactory;
 import se.salomonsson.ld27.game.factories.TileSheetFactory;
 import se.salomonsson.seagal.core.EW;
@@ -56,15 +57,29 @@ class LD27RenderSystem extends Sys
 	override public function onAdded(sm, em):Void 
 	{
 		super.onAdded(sm, em);
-		
-		_sheet = TileSheetFactory.buildTileSheet(Assets.getBitmapData("assets/spritesheet.png"));
-		
-		SpriteFactory.heroSprite(em);
-		
+		addListener(GameEvent.LEVEL_START, onNewLevel);
 	}
+	
+	override public function onRemoved():Void 
+	{
+		super.onRemoved();
+		removeListener(GameEvent.LEVEL_START, onNewLevel);
+	}
+	
+	private function onNewLevel(e:GameEvent):Void 
+	{
+		_sheet = em().getComp(LevelComp).sheet;
+	}
+	
+	
+	
 	
 	override public function tick(gt:GameTime):Void 
 	{
+		if (_sheet == null) {
+			return;
+		}
+		
 		if (_systemComp == null)
 			_systemComp = em().getComp(SystemComp);
 			
@@ -123,7 +138,7 @@ class LD27RenderSystem extends Sys
 			var spr:SpriteComp = ent.comp(SpriteComp);
 			_tileArray.push(pos.x-camX);
 			_tileArray.push(pos.y-camY);
-			_tileArray.push(4);
+			_tileArray.push(spr.getCurrentFrame());
 			_tileArray.push(scale);
 		}
 		

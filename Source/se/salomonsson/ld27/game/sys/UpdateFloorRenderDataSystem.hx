@@ -6,6 +6,7 @@ import pgr.gconsole.GameConsole;
 import se.salomonsson.game.utils.PixelMapParser;
 import se.salomonsson.ld27.game.comp.LevelComp;
 import se.salomonsson.ld27.game.comp.SelectableComp;
+import se.salomonsson.ld27.game.event.GameEvent;
 import se.salomonsson.ld27.game.factories.TileSheetFactory;
 import se.salomonsson.seagal.core.GameTime;
 import se.salomonsson.seagal.core.Sys;
@@ -16,26 +17,36 @@ import se.salomonsson.seagal.core.Sys;
  */
 class UpdateFloorRenderDataSystem extends Sys
 {
-	private var _currentLevel:Int;
+	private var _level:LevelComp;
 	
 	public function new() 
 	{
 		super();
-		_currentLevel = -1;
+	}
+	
+	override public function onAdded(sm, em):Void 
+	{
+		super.onAdded(sm, em);
+		addListener(GameEvent.LEVEL_START, onNewLevel);
+	}
+	
+	override public function onRemoved():Void 
+	{
+		super.onRemoved();
+		removeListener(GameEvent.LEVEL_START, onNewLevel);
+	}
+	
+	private function onNewLevel(e:GameEvent):Void 
+	{
+		_level = em().getComp(LevelComp);
 	}
 	
 	override public function tick(gt:GameTime):Void 
 	{
-		var level:LevelComp = em().getComp(LevelComp);
-		if (_currentLevel != level.levelId) {
-			// setup
-			_currentLevel = level.levelId;
-			var bd:BitmapData = new BitmapData(level.map.width, level.map.height, false, TileSheetFactory.FLOOR_REGULAR);
-			var floorMap:PixelMapParser = new PixelMapParser(bd);
-			level.floor = floorMap;
-		}
+		if (_level == null)
+			return;
 		
-		level.floor.clearAllOverrideValues();
+		_level.floor.clearAllOverrideValues();
 		
 		var selectables:Array<SelectableComp> = em().getComponents(SelectableComp);
 		for (sel in selectables) {
@@ -49,11 +60,13 @@ class UpdateFloorRenderDataSystem extends Sys
 					var pX:Int = Std.int(p.x);
 					var pY:Int = Std.int(p.y);
 					
-					
-					if (level.map.atCoord(pX, pY) == 0xFFFFFF) {
-						level.floor.setOverrideValueAtCoord(pX, pY, TileSheetFactory.FLOOR_SELECTED);
-					} else {
-						level.floor.setOverrideValueAtCoord(Std.int(prevPoint.x), Std.int(prevPoint.y), TileSheetFactory.FLOOR_INVALID);
+					if (_level.map.atCoord(pX, pY) == 0xFFFFFF) {
+						_level.floor.setOverrideValueAtCoord(pX, pY, TileSheetFactory.FLOOR_SELECTED);
+					} else { // invalid tile
+						
+						if (path.length > 1)
+							_level.floor.setOverrideValueAtCoord(Std.int(prevPoint.x), Std.int(prevPoint.y), TileSheetFactory.FLOOR_INVALID);
+						
 						break;
 					}
 					

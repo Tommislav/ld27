@@ -14,6 +14,8 @@ class SystemComp implements IComponent
 	public var tileH:Int;
 	
 	public var timeLeft:Int;
+	public var playersAlive:Int;
+	public var playersRescued:Int;
 	
 	public function new() {}
 	

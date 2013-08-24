@@ -5,6 +5,8 @@ import pgr.gconsole.GameConsole;
 import se.salomonsson.ld27.game.comp.LevelComp;
 import se.salomonsson.ld27.game.comp.PosComp;
 import se.salomonsson.ld27.game.comp.SelectableComp;
+import se.salomonsson.ld27.game.comp.SpriteCollisionComponent;
+import se.salomonsson.ld27.game.comp.SpriteComp;
 import se.salomonsson.ld27.game.comp.TouchComp;
 import se.salomonsson.seagal.core.EW;
 import se.salomonsson.seagal.core.GameTime;
@@ -51,6 +53,8 @@ class MoveSelectableObjectsSystem extends Sys
 						sel.moveToX = p.x * 64;
 						sel.moveToY = p.y * 64;
 						isMoving = true;
+					} else {
+						sel.selectedPath = new Array<Point>();
 					}
 				}
 				
@@ -58,7 +62,7 @@ class MoveSelectableObjectsSystem extends Sys
 					var currX = pos.x;
 					var currY = pos.y;
 					
-					var speed = 2;
+					var speed = 4;
 					
 					var dX = (sel.moveToX - currX);
 					var dY = (sel.moveToY - currY);
@@ -76,12 +80,31 @@ class MoveSelectableObjectsSystem extends Sys
 					pos.y += sY;
 					
 					if (pos.x == sel.moveToX && pos.y == sel.moveToY) {	// reached a node
+						checkCollisionAtStop(ew, pos.x, pos.y);
 						sel.moveToX = sel.moveToY = -1;
 					}
 				}
 			}
 			
 			
+		}
+	}
+	
+	function checkCollisionAtStop(collidingObj:EW, x:Float, y:Float) 
+	{
+		var collObjects:Array<EW> = em().getEWC([SpriteCollisionComponent]);
+		for (coll in collObjects) {
+			var pos:PosComp = coll.comp(PosComp);
+			if (pos.x == x && pos.y == y) {
+				// COLLISION
+				var collisionType:Int = coll.comp(SpriteCollisionComponent).type;
+				
+				if (collisionType == SpriteCollisionComponent.EXIT) {
+					collidingObj.comp(SpriteComp).setCurrentState("exit");
+					collidingObj.comp(SelectableComp).isSelectable = false;
+					collidingObj.comp(SelectableComp).selectedPath = new Array<Point>();
+				}
+			}
 		}
 	}
 	
