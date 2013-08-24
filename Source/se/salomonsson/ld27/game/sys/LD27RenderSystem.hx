@@ -12,8 +12,13 @@ import openfl.display.Tilesheet;
 import se.salomonsson.game.utils.PixelMapParser;
 import se.salomonsson.ld27.game.comp.CameraComp;
 import se.salomonsson.ld27.game.comp.LevelComp;
+import se.salomonsson.ld27.game.comp.PosComp;
+import se.salomonsson.ld27.game.comp.SpriteComp;
 import se.salomonsson.ld27.game.comp.SystemComp;
 import se.salomonsson.ld27.game.comp.TouchComp;
+import se.salomonsson.ld27.game.factories.SpriteFactory;
+import se.salomonsson.ld27.game.factories.TileSheetFactory;
+import se.salomonsson.seagal.core.EW;
 import se.salomonsson.seagal.core.GameTime;
 import se.salomonsson.seagal.core.Sys;
 
@@ -35,6 +40,14 @@ class LD27RenderSystem extends Sys
 	private var _systemComp:SystemComp;
 	private var _touchComp:TouchComp;
 	
+	private var _tileStartX:Int;
+	private var _tileStartY:Int;
+	private var _offX:Float;
+	private var _offY:Float;
+	
+	private var _tileArray:Array<Float>;
+	
+	
 	public function new(canvas:Graphics) {
 		super();
 		_canvas = canvas;
@@ -44,14 +57,9 @@ class LD27RenderSystem extends Sys
 	{
 		super.onAdded(sm, em);
 		
-		_sheet = new TilesheetEx(Assets.getBitmapData("assets/spritesheet.png"));
-		_sheet.addTileRect(new Rectangle(0, 0, 64, 64));
-		_sheet.addTileRect(new Rectangle(64, 0, 64, 128), new Point(0,0));
-		_sheet.addTileRect(new Rectangle(128, 0, 64, 128), new Point(0,0));
+		_sheet = TileSheetFactory.buildTileSheet(Assets.getBitmapData("assets/spritesheet.png"));
 		
-		_sheet.addTileRect(new Rectangle(0, 64, 64, 64)); // floor white
-		_sheet.addTileRect(new Rectangle(0, 64, 64*2, 64)); // floor walk
-		_sheet.addTileRect(new Rectangle(0, 64, 64*3, 64)); // floor cannot walk
+		SpriteFactory.heroSprite(em);
 		
 	}
 	
@@ -64,46 +72,58 @@ class LD27RenderSystem extends Sys
 			_touchComp = em().getComp(TouchComp);
 		
 		var cam:CameraComp = em().getComp(CameraComp);
-		var map:PixelMapParser = em().getComp(LevelComp).level;
+		var map:PixelMapParser = em().getComp(LevelComp).map;
 		
-		_canvas.clear();
-		
-		var tileArray:Array<Float> = new Array<Float>();
 		var scale:Float = 1.0;
 		
 		
 		var camX:Float = cam.x;
 		var camY:Float = cam.y;
 		
-		//var w:Int = Math.ceil(camera.width / 64) + 1;
-		//var h:Int = Math.ceil(camera.height / 64) + 1;
-		var tileX:Int = Math.floor(camX / 64);
-		var tileY:Int = Math.floor(camY / 64);
+		_tileStartX = Math.floor(camX / 64);
+		_tileStartY = Math.floor(camY / 64);
 		
-		var offX = aboveZero(camX % 64, 64);
-		var offY = aboveZero(camY % 64, 64);
+		_offX = aboveZero(camX % 64, 64);
+		_offY = aboveZero(camY % 64, 64);
+		
+		_tileArray = new Array<Float>();
+		
+		
+		
 		
 		for (y in 0..._systemComp.tileH) {
 			for (x in 0..._systemComp.tileW) {
 				
 				// floor
-				tileArray.push((x * 64) - offX);
-				tileArray.push((y * 64) - offY);
-				tileArray.push(3);
-				tileArray.push(scale);
+				_tileArray.push((x * 64) - _offX);
+				_tileArray.push((y * 64) - _offY);
+				_tileArray.push(getFloorTile(map, x, y));
+				_tileArray.push(scale);
 				
-				if (map.atCoord(x + tileX, y + tileY) == 0) {
+				if (map.atCoord(_tileStartX + x, _tileStartY + y) == 0) {
 					// wall
 					
-					tileArray.push((x * 64) - offX);
-					tileArray.push((y * 64) - offY);
-					tileArray.push(0);
-					tileArray.push(scale);
+					_tileArray.push((x * 64) - _offX);
+					_tileArray.push((y * 64) - _offY);
+					_tileArray.push(TileSheetFactory.STONE);
+					_tileArray.push(scale);
 				}
 			}
 		}
 		
-		_sheet.drawTiles(_canvas, tileArray, false, Tilesheet.TILE_SCALE);
+		var sprites:Array<EW> = em().getEWC([SpriteComp]);
+		for (i in 0...sprites.length) {
+			var ent:EW = sprites[i];
+			var pos:PosComp = ent.comp(PosComp);
+			var spr:SpriteComp = ent.comp(SpriteComp);
+			_tileArray.push(pos.x-camX);
+			_tileArray.push(pos.y-camY);
+			_tileArray.push(4);
+			_tileArray.push(scale);
+		}
+		
+		_canvas.clear();
+		_sheet.drawTiles(_canvas, _tileArray, false, Tilesheet.TILE_SCALE);
 		
 		
 		if (_touchComp.isTouching) {
@@ -111,6 +131,14 @@ class LD27RenderSystem extends Sys
 			_canvas.drawCircle(_touchComp.touchX, _touchComp.touchY, POINTER_SIZE);
 			_canvas.endFill();
 		}
+	}
+	
+	private function getFloorTile(map:PixelMapParser, x, y):Int {
+		var v = map.atCoord(x, y);
+		if (v == TileSheetFactory.FLOOR_SELECTED) {
+			return v;
+		}
+		return TileSheetFactory.FLOOR_REGULAR;
 	}
 	
 	private function aboveZero(val:Float, range:Float):Float {

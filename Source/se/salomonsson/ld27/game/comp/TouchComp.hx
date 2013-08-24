@@ -23,6 +23,8 @@ class TouchComp implements IComponent
 	
 	public var selected:Int;
 	
+	public var selectedTileX:Int;
+	public var selectedTileY:Int;
 	
 	public function new() {}
 	

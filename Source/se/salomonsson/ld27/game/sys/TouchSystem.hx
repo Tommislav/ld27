@@ -2,6 +2,8 @@ package se.salomonsson.ld27.game.sys;
 import flash.display.Stage;
 import flash.events.MouseEvent;
 import flash.Lib;
+import pgr.gconsole.GameConsole;
+import se.salomonsson.ld27.game.comp.CameraComp;
 import se.salomonsson.ld27.game.comp.SystemComp;
 import se.salomonsson.ld27.game.comp.TouchComp;
 import se.salomonsson.seagal.core.GameTime;
@@ -18,6 +20,8 @@ class TouchSystem extends Sys
 	private var _tY:Int;
 	private var _down:Bool;
 	private var _touchData:TouchComp;
+	
+	private var _cam:CameraComp;
 	
 	override public function tick(gt:GameTime):Void 
 	{
@@ -42,6 +46,11 @@ class TouchSystem extends Sys
 			_touchData.touchX = _tX;
 			_touchData.touchY = _tY;
 			
+			_touchData.selectedTileX = Std.int(_tX + _cam.x) >> 6;
+			_touchData.selectedTileY = Std.int(_tY + _cam.y) >> 6;
+			
+			//GameConsole.log("Touched tile: " + _touchData.selectedTileX + "," + _touchData.selectedTileY);
+			
 			_touchData.deltaX = (_touchData.touchX - _touchData.lastX);
 			_touchData.deltaY = (_touchData.touchY - _touchData.lastY);
 		}
@@ -52,6 +61,7 @@ class TouchSystem extends Sys
 	{
 		super.onAdded(sm, em);
 		_touchData = em.getComp(TouchComp);
+		_cam = em.getComp(CameraComp);
 		
 		_stage = Lib.current.stage;
 		_stage.addEventListener(MouseEvent.MOUSE_DOWN, onDown);

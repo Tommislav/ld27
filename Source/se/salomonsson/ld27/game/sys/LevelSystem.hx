@@ -18,7 +18,7 @@ class LevelSystem extends Sys
 		
 		var lvl:LevelComp = em.getComp(LevelComp);
 		var map:PixelMapParser = new PixelMapParser(Assets.getBitmapData("assets/level1.png"));
-		lvl.level = map;
+		lvl.map = map;
 	}
 	
 	override public function onRemoved():Void 
