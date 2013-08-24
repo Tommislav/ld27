@@ -94,8 +94,8 @@ class LD27RenderSystem extends Sys
 		var scale:Float = 1.0;
 		
 		
-		var camX:Float = cam.x;
-		var camY:Float = cam.y;
+		var camX:Float = Math.round(cam.x);
+		var camY:Float = Math.round(cam.y);
 		
 		_tileStartX = Math.floor(camX / 64);
 		_tileStartY = Math.floor(camY / 64);

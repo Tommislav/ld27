@@ -48,7 +48,17 @@ class LevelSystem extends Sys
 				SpriteFactory.exitSprite(em(), 20, 10);
 				SpriteFactory.heroSprite(em(), 6, 8);
 				centerCamera(camera, 6, 8);
-				
+			
+			case 2:
+				level.map = new PixelMapParser(Assets.getBitmapData("assets/level2.png"));
+				level.floor = createFloor(level.map);
+				SpriteFactory.bombSprite(em(), 7, 3);
+				SpriteFactory.exitSprite(em(), 14, 17);
+				SpriteFactory.exitSprite(em(), 18, 17);
+				SpriteFactory.heroSprite(em(), 6, 3);
+				SpriteFactory.heroSprite(em(), 8, 3);
+				centerCamera(camera, 7, 3);
+			
 			default:
 				success = false;
 		}
