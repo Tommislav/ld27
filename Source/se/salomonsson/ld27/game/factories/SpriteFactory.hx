@@ -3,7 +3,9 @@ import se.salomonsson.ld27.game.comp.PosComp;
 import se.salomonsson.ld27.game.comp.SelectableComp;
 import se.salomonsson.ld27.game.comp.SpriteCollisionComponent;
 import se.salomonsson.ld27.game.comp.SpriteComp;
+import se.salomonsson.ld27.game.comp.SystemComp;
 import se.salomonsson.seagal.core.EntManager;
+import se.salomonsson.seagal.core.EW;
 
 /**
  * ...
@@ -15,6 +17,8 @@ class SpriteFactory
 	
 	
 	public static function heroSprite(em:EntManager, x:Int, y:Int) {
+		
+		em.getComp(SystemComp).numPlayers += 1;
 		
 		var sprite:SpriteComp = new SpriteComp();
 		sprite.addState("default", [TileSheetFactory.HERO]);
@@ -94,7 +98,12 @@ class SpriteFactory
 			.addComponent(coll);
 	}
 	
-	
+	public static function destroyAllSprites(em:EntManager) {
+		var allSprites:Array<EW> = em.getEWC([SpriteComp]);
+		for (entWrapper in allSprites) {
+			entWrapper.destroy();
+		}
+	}
 	
 	
 	

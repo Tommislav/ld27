@@ -58,17 +58,24 @@ class LD27RenderSystem extends Sys
 	{
 		super.onAdded(sm, em);
 		addListener(GameEvent.LEVEL_START, onNewLevel);
+		addListener(GameEvent.LEVEL_EXIT, onExitLevel);
 	}
 	
 	override public function onRemoved():Void 
 	{
 		super.onRemoved();
 		removeListener(GameEvent.LEVEL_START, onNewLevel);
+		removeListener(GameEvent.LEVEL_EXIT, onExitLevel);
 	}
 	
 	private function onNewLevel(e:GameEvent):Void 
 	{
 		_sheet = em().getComp(LevelComp).sheet;
+	}
+	
+	private function onExitLevel(e:GameEvent):Void
+	{
+		_sheet = null;
 	}
 	
 	

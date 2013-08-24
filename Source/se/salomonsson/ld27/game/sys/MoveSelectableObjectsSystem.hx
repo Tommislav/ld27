@@ -7,6 +7,7 @@ import se.salomonsson.ld27.game.comp.PosComp;
 import se.salomonsson.ld27.game.comp.SelectableComp;
 import se.salomonsson.ld27.game.comp.SpriteCollisionComponent;
 import se.salomonsson.ld27.game.comp.SpriteComp;
+import se.salomonsson.ld27.game.comp.SystemComp;
 import se.salomonsson.ld27.game.comp.TouchComp;
 import se.salomonsson.seagal.core.EW;
 import se.salomonsson.seagal.core.GameTime;
@@ -103,6 +104,7 @@ class MoveSelectableObjectsSystem extends Sys
 					collidingObj.comp(SpriteComp).setCurrentState("exit");
 					collidingObj.comp(SelectableComp).isSelectable = false;
 					collidingObj.comp(SelectableComp).selectedPath = new Array<Point>();
+					em().getComp(SystemComp).playersRescued++;
 				}
 			}
 		}

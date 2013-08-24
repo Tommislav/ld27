@@ -57,7 +57,7 @@ class GameScreen extends Sprite
 		_core.addSystem(new LD27RenderSystem(graphics), 1);
 		
 		
-		_core.dispatch(new StartNewLevelEvent(StartNewLevelEvent.NEW_LEVEL, 2));
+		_core.dispatch(new StartNewLevelEvent(StartNewLevelEvent.NEW_LEVEL, 1));
 		
 		addEventListener(Event.ENTER_FRAME, onEF);
 	}

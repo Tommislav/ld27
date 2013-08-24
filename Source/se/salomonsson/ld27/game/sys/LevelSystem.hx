@@ -2,6 +2,7 @@ package se.salomonsson.ld27.game.sys;
 
 import flash.display.BitmapData;
 import openfl.Assets;
+import pgr.gconsole.GameConsole;
 import se.salomonsson.game.utils.PixelMapParser;
 import se.salomonsson.ld27.game.comp.CameraComp;
 import se.salomonsson.ld27.game.comp.LevelComp;
@@ -10,6 +11,7 @@ import se.salomonsson.ld27.game.event.GameEvent;
 import se.salomonsson.ld27.game.event.StartNewLevelEvent;
 import se.salomonsson.ld27.game.factories.SpriteFactory;
 import se.salomonsson.ld27.game.factories.TileSheetFactory;
+import se.salomonsson.seagal.core.GameTime;
 import se.salomonsson.seagal.core.Sys;
 
 /**
@@ -19,22 +21,30 @@ import se.salomonsson.seagal.core.Sys;
 class LevelSystem extends Sys
 {
 
+	private var _systemComp:SystemComp;
+	private var _levelComp:LevelComp;
+	
 	override public function onAdded(sm, em):Void 
 	{
 		super.onAdded(sm, em);
 		addListener(StartNewLevelEvent.NEW_LEVEL, onStartNewLevel);
+		addListener(GameEvent.LEVEL_EXIT, onExitLevel);
 		
-		var lvl:LevelComp = em.getComp(LevelComp);
-		var map:PixelMapParser = new PixelMapParser(Assets.getBitmapData("assets/level1.png"));
-		lvl.map = map;
+		_systemComp = em.getComp(SystemComp);
+		_levelComp = em.getComp(LevelComp);
 	}
 	
 	private function onStartNewLevel(e:StartNewLevelEvent):Void 
 	{
-		var level:LevelComp = em().getComp(LevelComp);
+		
 		var camera:CameraComp = em().getComp(CameraComp);
 		var levelNum:Int = e.currentLevel;
-		level.levelId = levelNum;
+		_levelComp.levelId = levelNum;
+		
+		// Reset number of players, dead players and exited players
+		_systemComp.numPlayers = 0;
+		_systemComp.playersDead = 0;
+		_systemComp.playersRescued = 0;
 		
 		
 		
@@ -42,16 +52,16 @@ class LevelSystem extends Sys
 		
 		switch(levelNum) {
 			case 1:
-				level.map = new PixelMapParser(Assets.getBitmapData("assets/level1.png"));
-				level.floor = createFloor(level.map);
+				_levelComp.map = new PixelMapParser(Assets.getBitmapData("assets/level1.png"));
+				_levelComp.floor = createFloor(_levelComp.map);
 				SpriteFactory.bombSprite(em(), 5, 8);
 				SpriteFactory.exitSprite(em(), 20, 10);
 				SpriteFactory.heroSprite(em(), 6, 8);
 				centerCamera(camera, 6, 8);
 			
 			case 2:
-				level.map = new PixelMapParser(Assets.getBitmapData("assets/level2.png"));
-				level.floor = createFloor(level.map);
+				_levelComp.map = new PixelMapParser(Assets.getBitmapData("assets/level2.png"));
+				_levelComp.floor = createFloor(_levelComp.map);
 				SpriteFactory.bombSprite(em(), 7, 3);
 				SpriteFactory.exitSprite(em(), 14, 17);
 				SpriteFactory.exitSprite(em(), 18, 17);
@@ -73,6 +83,10 @@ class LevelSystem extends Sys
 		}
 	}
 	
+	private function onExitLevel(e:GameEvent) {
+		SpriteFactory.destroyAllSprites(em());
+	}
+	
 	function createFloor(map:PixelMapParser) 
 	{
 		var bd:BitmapData = new BitmapData(map.width, map.height, false, TileSheetFactory.FLOOR_REGULAR);
@@ -82,6 +96,7 @@ class LevelSystem extends Sys
 	override public function onRemoved():Void 
 	{
 		removeListener(StartNewLevelEvent.NEW_LEVEL, onStartNewLevel);
+		removeListener(GameEvent.LEVEL_EXIT, onExitLevel);
 		super.onRemoved();
 	}
 	
@@ -92,5 +107,24 @@ class LevelSystem extends Sys
 		
 		cam.x = pX - (sys.vpWidth / 2);
 		cam.y = pY - (sys.vpHeight / 2);
+	}
+	
+	
+	
+	
+	
+	override public function tick(gt:GameTime):Void 
+	{
+		if (_systemComp.playersRescued == _systemComp.numPlayers) {
+			GameConsole.log("Start next level!!");
+			
+			// Level completed
+			dispatch(new GameEvent(GameEvent.LEVEL_EXIT));
+			
+			// start next level (here we'll probably want to show a hint or something)
+			var nextLevelId:Int = _levelComp.levelId + 1;
+			dispatch(new StartNewLevelEvent(StartNewLevelEvent.NEW_LEVEL, nextLevelId));
+		}
+		
 	}
 }
