@@ -92,6 +92,7 @@ class BombSystem extends Sys
 				// BOOM
 				_sys.bombHasExploded = true;
 				dispatch(new GameEvent(GameEvent.BOMB_EXPLODE));
+				GameConsole.log("BOOM!!!");
 			}
 		}
 		_lastTick = now;

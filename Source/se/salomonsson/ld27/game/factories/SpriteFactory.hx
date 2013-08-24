@@ -1,4 +1,5 @@
 package se.salomonsson.ld27.game.factories;
+import se.salomonsson.ld27.game.comp.BombComponent;
 import se.salomonsson.ld27.game.comp.PosComp;
 import se.salomonsson.ld27.game.comp.SelectableComp;
 import se.salomonsson.ld27.game.comp.SpriteCollisionComponent;
@@ -49,10 +50,13 @@ class SpriteFactory
 		pos.x = x * 64;
 		pos.y = y * 64;
 		
+		var collision = new SpriteCollisionComponent(SpriteCollisionComponent.SOLID);
+		
 		em.allocateEntity()
 			.addComponent(sprite)
 			.addComponent(pos)
-			.addComponent(new SpriteCollisionComponent(SpriteCollisionComponent.SOLID));
+			.addComponent(collision)
+			.addComponent(new BombComponent());
 	}
 	
 	

@@ -57,13 +57,20 @@ class LevelSystem extends Sys
 			case 1:
 				_levelComp.map = new PixelMapParser(Assets.getBitmapData("assets/level1.png"));
 				_levelComp.floor = createFloor(_levelComp.map);
+				SpriteFactory.exitSprite(em(), 16, 11);
+				SpriteFactory.heroSprite(em(), 9, 9);
+				centerCamera(camera, 9, 9);
+			
+			case 2:
+				_levelComp.map = new PixelMapParser(Assets.getBitmapData("assets/level2.png"));
+				_levelComp.floor = createFloor(_levelComp.map);
 				SpriteFactory.bombSprite(em(), 5, 8);
 				SpriteFactory.exitSprite(em(), 20, 10);
 				SpriteFactory.heroSprite(em(), 6, 8);
 				centerCamera(camera, 6, 8);
 			
-			case 2:
-				_levelComp.map = new PixelMapParser(Assets.getBitmapData("assets/level2.png"));
+			case 3:
+				_levelComp.map = new PixelMapParser(Assets.getBitmapData("assets/level3.png"));
 				_levelComp.floor = createFloor(_levelComp.map);
 				SpriteFactory.bombSprite(em(), 7, 3);
 				SpriteFactory.exitSprite(em(), 14, 17);
