@@ -55,7 +55,7 @@ class HandleSelecatbleObjectsSystem extends Sys
 				
 				_selected = findSelectedSprite(selectables);
 				if (_selected != null) {
-					_selected.comp(SelectableComp).selectedPath = new Array<Point>(); // reset any paths this guy might have...
+					clearPath(_selected.comp(SelectableComp));// reset any paths this guy might have...
 					_touchComp.selected = _selected.getEntity();
 					
 				}
@@ -74,7 +74,11 @@ class HandleSelecatbleObjectsSystem extends Sys
 		}
 	}
 	
-	
+	function clearPath(comp:SelectableComp) {
+		comp.moveToX = -1;
+		comp.moveToY = -1;
+		comp.selectedPath = new Array<Point>();
+	}
 	
 	function updateSelectionCoordinates(selectables:Array<EW>) 
 	{
@@ -108,13 +112,6 @@ class HandleSelecatbleObjectsSystem extends Sys
 		// Don't add to the path if we're on the same tile, only if we dragged mouse to new tile
 		if (_touchComp.selectedTileX != lastSelection.x || _touchComp.selectedTileY != lastSelection.y) {
 			path.push(new Point(_touchComp.selectedTileX, _touchComp.selectedTileY));
-			GameConsole.log("Path: " + path);
 		}
-		/*
-		var level:LevelComp = em().getComp(LevelComp);
-		for (i in 0...path.length) {
-			level.map.setOverrideValueAtCoord(Std.int(path[i].x), Std.int(path[i].y), TileSheetFactory.FLOOR_SELECTED);
-		}
-		*/
 	}
 }

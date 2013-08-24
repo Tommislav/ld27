@@ -9,6 +9,7 @@ import se.salomonsson.ld27.game.comp.TouchComp;
 import se.salomonsson.ld27.game.sys.HandleSelecatbleObjectsSystem;
 import se.salomonsson.ld27.game.sys.LD27RenderSystem;
 import se.salomonsson.ld27.game.sys.LevelSystem;
+import se.salomonsson.ld27.game.sys.MoveSelectableObjectsSystem;
 import se.salomonsson.ld27.game.sys.ScrollSystem;
 import se.salomonsson.ld27.game.sys.TouchSystem;
 import se.salomonsson.ld27.game.sys.UpdateFloorRenderDataSystem;
@@ -43,8 +44,9 @@ class GameScreen extends Sprite
 		_core.addSystem(new LevelSystem(), 4);
 		_core.addSystem(new HandleSelecatbleObjectsSystem(), 4);
 		
-		_core.addSystem(new ScrollSystem(), 3);
+		_core.addSystem(new MoveSelectableObjectsSystem(), 3);
 		
+		_core.addSystem(new ScrollSystem(), 2);
 		_core.addSystem(new UpdateFloorRenderDataSystem(), 2);
 		
 		_core.addSystem(new LD27RenderSystem(graphics), 1);

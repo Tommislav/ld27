@@ -14,11 +14,14 @@ class SelectableComp implements IComponent
 	public var currentTileX:Int;
 	public var currentTileY:Int;
 	public var selectedPath:Array<Point>;
+	public var moveToX:Float;
+	public var moveToY:Float;
 	
 	public function new() 
 	{
 		isSelectable = true;
 		selectedPath = new Array<Point>();
+		moveToX = -1;
+		moveToY = -1;
 	}
-	
 }
