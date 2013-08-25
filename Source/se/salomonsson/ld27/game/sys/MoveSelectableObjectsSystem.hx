@@ -2,6 +2,7 @@ package se.salomonsson.ld27.game.sys;
 
 import flash.geom.Point;
 import pgr.gconsole.GameConsole;
+import se.salomonsson.ld27.game.comp.ExplodableComp;
 import se.salomonsson.ld27.game.comp.LevelComp;
 import se.salomonsson.ld27.game.comp.PosComp;
 import se.salomonsson.ld27.game.comp.SelectableComp;
@@ -14,7 +15,8 @@ import se.salomonsson.seagal.core.GameTime;
 import se.salomonsson.seagal.core.Sys;
 
 /**
- * ...
+ * Selectable objects in this case is (at least as for as of this writing)
+ * only the player, but could be any selectable object with a path-array.
  * @author Tommislav
  */
 class MoveSelectableObjectsSystem extends Sys
@@ -105,6 +107,10 @@ class MoveSelectableObjectsSystem extends Sys
 					collidingObj.comp(SelectableComp).isSelectable = false;
 					collidingObj.comp(SelectableComp).selectedPath = new Array<Point>();
 					em().getComp(SystemComp).playersRescued++;
+					
+					if (collidingObj.hasComponent(ExplodableComp)) {
+						collidingObj.comp(ExplodableComp).safe = true;
+					}
 				}
 			}
 		}

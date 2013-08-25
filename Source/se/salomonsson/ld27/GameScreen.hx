@@ -17,6 +17,8 @@ import se.salomonsson.ld27.game.sys.LevelSystem;
 import se.salomonsson.ld27.game.sys.MoveSelectableObjectsSystem;
 import se.salomonsson.ld27.game.sys.ScrollSystem;
 import se.salomonsson.ld27.game.sys.TouchSystem;
+import se.salomonsson.ld27.game.sys.UpdateExplodablesSystem;
+import se.salomonsson.ld27.game.sys.UpdateExplodablesSystem;
 import se.salomonsson.ld27.game.sys.UpdateFloorRenderDataSystem;
 import se.salomonsson.seagal.core.Core;
 
@@ -55,11 +57,12 @@ class GameScreen extends Sprite
 		
 		_core.addSystem(new ScrollSystem(), 2);
 		_core.addSystem(new UpdateFloorRenderDataSystem(), 2);
+		_core.addSystem(new UpdateExplodablesSystem(), 2);
 		
 		_core.addSystem(new LD27RenderSystem(graphics), 1);
 		
 		
-		_core.dispatch(new StartNewLevelEvent(StartNewLevelEvent.NEW_LEVEL, 1));
+		_core.dispatch(new StartNewLevelEvent(StartNewLevelEvent.NEW_LEVEL, 2));
 		
 		addEventListener(Event.ENTER_FRAME, onEF);
 	}

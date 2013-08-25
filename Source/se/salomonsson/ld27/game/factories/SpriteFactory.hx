@@ -1,5 +1,6 @@
 package se.salomonsson.ld27.game.factories;
 import se.salomonsson.ld27.game.comp.BombComponent;
+import se.salomonsson.ld27.game.comp.ExplodableComp;
 import se.salomonsson.ld27.game.comp.PosComp;
 import se.salomonsson.ld27.game.comp.SelectableComp;
 import se.salomonsson.ld27.game.comp.SpriteCollisionComponent;
@@ -24,19 +25,21 @@ class SpriteFactory
 		var sprite:SpriteComp = new SpriteComp();
 		sprite.addState("default", [TileSheetFactory.HERO]);
 		sprite.addState("exit", [TileSheetFactory.HERO_EXIT]);
+		sprite.addState("dead", [TileSheetFactory.HERO_DEAD]);
 		
 		var sel:SelectableComp = new SelectableComp();
 		sel.currentTileX = x;
 		sel.currentTileY = y;
 		
-		var pos:PosComp = new PosComp();
-		pos.x = sel.currentTileX * 64;
-		pos.y = sel.currentTileY * 64;
+		var pos:PosComp = new PosComp().init(sel.currentTileX * 64, sel.currentTileY * 64, 64, 64);
+		
+		var explodable:ExplodableComp = new ExplodableComp();
 		
 		em.allocateEntity()
 			.addComponent(sprite)
 			.addComponent(pos)
-			.addComponent(sel);
+			.addComponent(sel)
+			.addComponent(explodable);
 	}
 	
 	
@@ -46,10 +49,7 @@ class SpriteFactory
 		sprite.addState("default", [TileSheetFactory.BOMB_1, TileSheetFactory.BOMB_1, TileSheetFactory.BOMB_2, TileSheetFactory.BOMB_2, TileSheetFactory.BOMB_3, TileSheetFactory.BOMB_3]);
 		sprite.autoLoop = true;
 		
-		var pos:PosComp = new PosComp();
-		pos.x = x * 64;
-		pos.y = y * 64;
-		
+		var pos:PosComp = new PosComp().init(x * 64, y * 64, 64, 64);
 		var collision = new SpriteCollisionComponent(SpriteCollisionComponent.SOLID);
 		
 		em.allocateEntity()

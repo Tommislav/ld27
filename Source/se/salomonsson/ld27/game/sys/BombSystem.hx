@@ -46,6 +46,9 @@ class BombSystem extends Sys
 		
 		addListener(GameEvent.LEVEL_START, onLevelStart);
 		addListener(GameEvent.LEVEL_EXIT, onLevelExit);
+		addListener(GameEvent.BOMB_EXPLODE, onBombExplode);
+		
+		GameConsole.registerFunction(this, "debugExplodeBomb", "boom");
 	}
 	
 	override public function onRemoved():Void 
@@ -53,6 +56,7 @@ class BombSystem extends Sys
 		super.onRemoved();
 		removeListener(GameEvent.LEVEL_START, onLevelStart);
 		removeListener(GameEvent.LEVEL_EXIT, onLevelExit);
+		removeListener(GameEvent.BOMB_EXPLODE, onBombExplode);
 	}
 	
 	private function onLevelStart(e:GameEvent):Void 
@@ -88,7 +92,6 @@ class BombSystem extends Sys
 			
 			if (_sys.timeLeft < 0) {
 				// BOOM
-				_sys.bombHasExploded = true;
 				dispatch(new GameEvent(GameEvent.BOMB_EXPLODE));
 				GameConsole.log("BOOM!!!");
 			}
@@ -96,8 +99,20 @@ class BombSystem extends Sys
 		_lastTick = now;
 	}
 	
-	private function floodfillFire()
+	
+	
+	// debug stuff
+	
+	
+	private function onBombExplode(e:GameEvent):Void 
 	{
-		
+		// We don't need to count down anymore
+		_sys.bombHasExploded = true;
+	}
+	
+	public function debugExplodeBomb():Void {
+		if (!_sys.bombHasExploded) {
+			dispatch(new GameEvent(GameEvent.BOMB_EXPLODE));
+		}
 	}
 }

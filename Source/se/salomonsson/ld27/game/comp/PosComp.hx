@@ -1,4 +1,5 @@
 package se.salomonsson.ld27.game.comp;
+import flash.events.FocusEvent;
 import se.salomonsson.seagal.core.IComponent;
 
 /**
@@ -15,6 +16,15 @@ class PosComp implements IComponent
 	public function new() 
 	{
 		x = y = width = height = 0;
+	}
+	
+	public function init(x:Float, y:Float, width:Float, height:Float):PosComp
+	{
+		this.x = x;
+		this.y = y;
+		this.width = width;
+		this.height = height;
+		return this;
 	}
 	
 }

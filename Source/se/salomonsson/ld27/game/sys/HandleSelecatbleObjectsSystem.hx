@@ -16,7 +16,7 @@ import se.salomonsson.seagal.core.Sys;
 /**
  * Listens for clicks and checks if a selectable object was selected.
  * If a selectable object is currently selected and we are dragging the
- * mouse we update the path for that object
+ * mouse we update the path for that object.
  * @author Tommislav
  */
 class HandleSelecatbleObjectsSystem extends Sys
@@ -88,8 +88,8 @@ class HandleSelecatbleObjectsSystem extends Sys
 		for (ent in selectables) {
 			var pos:PosComp = ent.comp(PosComp);
 			var sel:SelectableComp = ent.comp(SelectableComp);
-			sel.currentTileX = (Std.int(pos.x) >> 6);
-			sel.currentTileY = (Std.int(pos.y) >> 6);
+			sel.currentTileX = (Std.int(pos.x + pos.width/2) >> 6);
+			sel.currentTileY = (Std.int(pos.y + pos.height/2) >> 6);
 		}
 	}
 	

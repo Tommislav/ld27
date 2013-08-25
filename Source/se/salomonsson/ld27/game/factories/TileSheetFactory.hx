@@ -22,6 +22,7 @@ class TileSheetFactory
 	public static inline var STONE = 3;
 	public static inline var HERO = 4;
 	public static inline var HERO_EXIT = 5;
+	public static inline var HERO_DEAD = 17;
 	
 	
 	
@@ -38,6 +39,8 @@ class TileSheetFactory
 	public static inline var EXPLOSION_2 = 14;
 	public static inline var EXPLOSION_3 = 15;
 	public static inline var EXPLOSION_4 = 16;
+	
+	
 	public static var EXPLOSION:Array<Int> = [EXPLOSION_1, EXPLOSION_2, EXPLOSION_3, EXPLOSION_4];
 	
 	
@@ -66,6 +69,7 @@ class TileSheetFactory
 		sheet.addTileRect(tileRect(5, 5));	// explosion 3
 		sheet.addTileRect(tileRect(5, 6));	// explosion 4
 		
+		sheet.addTileRect(tileRect(4, 2));	// player dead
 		
 		return sheet;
 	}
