@@ -25,6 +25,10 @@ class SpriteFactory
 		
 		var sprite:SpriteComp = new SpriteComp();
 		sprite.addState("default", [TileSheetFactory.HERO]);
+		sprite.addState("up", [TileSheetFactory.HERO_UP]);
+		sprite.addState("down", [TileSheetFactory.HERO_DOWN]);
+		sprite.addState("left", [TileSheetFactory.HERO_LEFT]);
+		sprite.addState("right", [TileSheetFactory.HERO_RIGHT]);
 		sprite.addState("exit", [TileSheetFactory.HERO_EXIT]);
 		sprite.addState("dead", [TileSheetFactory.HERO_DEAD]);
 		

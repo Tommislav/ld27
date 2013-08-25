@@ -2,6 +2,7 @@ package se.salomonsson.ld27;
 
 
 import flash.display.Sprite;
+import openfl.Assets;
 import se.salomonsson.seagal.screen.ShowBitmapScreen;
 
 

@@ -18,6 +18,7 @@ import se.salomonsson.ld27.game.sys.LevelSystem;
 import se.salomonsson.ld27.game.sys.MoveSelectableObjectsSystem;
 import se.salomonsson.ld27.game.sys.ScreenSystem;
 import se.salomonsson.ld27.game.sys.ScrollSystem;
+import se.salomonsson.ld27.game.sys.SoundSys;
 import se.salomonsson.ld27.game.sys.TouchSystem;
 import se.salomonsson.ld27.game.sys.UpdateExplodablesSystem;
 import se.salomonsson.ld27.game.sys.UpdateExplodablesSystem;
@@ -56,6 +57,7 @@ class GameScreen extends Sprite
 		
 		_core.addSystem(new MoveSelectableObjectsSystem(), 3);
 		_core.addSystem(new FloodFillExplosionSystem(), 3);
+		_core.addSystem(new SoundSys(), 3);
 		
 		_core.addSystem(new ScrollSystem(), 2);
 		_core.addSystem(new UpdateFloorRenderDataSystem(), 2);
@@ -65,7 +67,7 @@ class GameScreen extends Sprite
 		_core.addSystem(new LD27RenderSystem(graphics), 1);
 		
 		
-		_core.dispatch(new InitGameEvent(InitGameEvent.INIT, 5));
+		_core.dispatch(new InitGameEvent(InitGameEvent.INIT, 1));
 		
 		addEventListener(Event.ENTER_FRAME, onEF);
 	}

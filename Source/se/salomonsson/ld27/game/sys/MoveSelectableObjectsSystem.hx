@@ -43,11 +43,13 @@ class MoveSelectableObjectsSystem extends Sys
 		var selectableObjects:Array<EW> = em().getEWC([SelectableComp, PosComp]);
 		for (ew in selectableObjects) {
 			var sel:SelectableComp = ew.comp(SelectableComp);
+			var sprite:SpriteComp = ew.comp(SpriteComp);
 			
 			var isMoving:Bool = (sel.moveToX > -1 && sel.moveToY > -1);
 			if (isMoving || sel.selectedPath.length > 0) {
 				
 				var pos:PosComp = ew.comp(PosComp);
+				
 				
 				if (!isMoving) { // remove first tile in path and set it as target
 					var p:Point = sel.selectedPath.shift();
@@ -81,7 +83,23 @@ class MoveSelectableObjectsSystem extends Sys
 					pos.x += sX;
 					pos.y += sY;
 					
+					if (dX != 0) {
+						if (dX < 0)
+							sprite.setCurrentState("left");
+						else
+							sprite.setCurrentState("right");
+					} else {
+						if (dY < 0)
+							sprite.setCurrentState("up");
+						else
+							sprite.setCurrentState("down"); 
+					}
+					
+					
 					if (pos.x == sel.moveToX && pos.y == sel.moveToY) {	// reached a node
+						if (sel.selectedPath.length == 0) {
+							sprite.setCurrentState("default");
+						}
 						checkCollisionAtStop(ew, pos.x, pos.y);
 						sel.moveToX = sel.moveToY = -1;
 					}
