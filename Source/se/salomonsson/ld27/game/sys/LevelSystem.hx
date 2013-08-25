@@ -25,6 +25,7 @@ class LevelSystem extends Sys
 	private var _levelComp:LevelComp;
 	private var _nextLevelCountdown:Int;
 	private var _levelRunning:Bool;
+	private var _delayAction:String;
 	
 	override public function onAdded(sm, em):Void 
 	{
@@ -39,6 +40,7 @@ class LevelSystem extends Sys
 	private function onStartNewLevel(e:StartNewLevelEvent):Void 
 	{
 		_levelRunning = true;
+		_delayAction = "";
 		
 		var camera:CameraComp = em().getComp(CameraComp);
 		var levelNum:Int = e.currentLevel;
@@ -48,6 +50,7 @@ class LevelSystem extends Sys
 		_systemComp.numPlayers = 0;
 		_systemComp.playersDead = 0;
 		_systemComp.playersRescued = 0;
+		_systemComp.playersRescueThreshold = 0;
 		
 		
 		
@@ -83,7 +86,9 @@ class LevelSystem extends Sys
 				success = false;
 		}
 		
-		
+		if (_systemComp.playersRescueThreshold == 0) {
+			_systemComp.playersRescueThreshold = _systemComp.numPlayers;
+		}
 		
 		
 		if (success) {
@@ -126,25 +131,63 @@ class LevelSystem extends Sys
 	override public function tick(gt:GameTime):Void 
 	{
 		if (_levelRunning) {
-			if (_systemComp.playersRescued == _systemComp.numPlayers) {
-				GameConsole.log("Start next level!!");
-				
-				// Level completed
-				dispatch(new GameEvent(GameEvent.LEVEL_EXIT));
-				
-				_levelRunning = false;
-				_nextLevelCountdown = 60;
+			var gameOver:Bool = checkIfGameOver();
+			var levelCompleted:Bool = checkIfLevelCompleted();
+			
+			
+			if (gameOver) {
+				_delayAction = "gameOver";
 			}
+			
+			if (levelCompleted) {
+				_delayAction = "nextLevel";
+				dispatch(new GameEvent(GameEvent.LEVEL_EXIT));
+			}
+			
+			if (gameOver || levelCompleted) {
+				_nextLevelCountdown = 60;
+				_levelRunning = false;
+				
+			}
+			
 		} else {
 			if (--_nextLevelCountdown <= 0) {
-				// start next level (here we'll probably want to show a hint or something)
-				var nextLevelId:Int = _levelComp.levelId + 1;
-				dispatch(new StartNewLevelEvent(StartNewLevelEvent.NEW_LEVEL, nextLevelId));
+				
+				if (_delayAction == "nextLevel") {
+					// start next level (here we'll probably want to show a hint or something)
+					var nextLevelId:Int = _levelComp.levelId + 1;
+					dispatch(new StartNewLevelEvent(StartNewLevelEvent.NEW_LEVEL, nextLevelId));
+				} else if (_delayAction == "gameOver") {
+					dispatch(new GameEvent(GameEvent.GAME_OVER));
+				}
+				_delayAction = "";
 			}
 		}
 		
 		
 		
 		
+	}
+	
+	function checkIfGameOver():Bool
+	{
+		if (_systemComp.playersDead + _systemComp.playersRescued == _systemComp.numPlayers) {
+			// All players are dead or rescued...
+			if (_systemComp.playersRescued < _systemComp.playersRescueThreshold) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	function checkIfLevelCompleted() 
+	{
+		if (_systemComp.playersDead + _systemComp.playersRescued == _systemComp.numPlayers) {
+			// All players are dead or rescued...
+			if (_systemComp.playersRescued >= _systemComp.playersRescueThreshold) {
+				return true;
+			}
+		}
+		return false;
 	}
 }

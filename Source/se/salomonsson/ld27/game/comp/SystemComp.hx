@@ -18,8 +18,10 @@ class SystemComp implements IComponent
 	public var numPlayers:Int;
 	public var playersDead:Int;
 	public var playersRescued:Int;
+	public var playersRescueThreshold:Int;
 	
 	public var bombHasExploded:Bool;
+	public var bombFloodFillCompleted:Bool;
 	
 	public function new() {}
 	

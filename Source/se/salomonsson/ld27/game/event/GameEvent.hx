@@ -10,6 +10,7 @@ class GameEvent extends Event
 	public static inline var LEVEL_START = "levelstart";
 	public static inline var LEVEL_EXIT = "levelexit";
 	public static inline var BOMB_EXPLODE = "bombexplode";
+	public static inline var GAME_OVER = "gameover";
 	
 	
 	public function new(type:String) 

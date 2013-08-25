@@ -5,6 +5,7 @@ import pgr.gconsole.GameConsole;
 import se.salomonsson.ld27.game.comp.ExplodableComp;
 import se.salomonsson.ld27.game.comp.LevelComp;
 import se.salomonsson.ld27.game.comp.PosComp;
+import se.salomonsson.ld27.game.comp.RescuableComponent;
 import se.salomonsson.ld27.game.comp.SelectableComp;
 import se.salomonsson.ld27.game.comp.SpriteComp;
 import se.salomonsson.ld27.game.comp.SystemComp;
@@ -42,8 +43,6 @@ class UpdateExplodablesSystem extends Sys
 		if (_systemComp.bombHasExploded) {
 			var explodables:Array<EW> = em().getEWC([ExplodableComp, PosComp]);
 			
-			GameConsole.log("check explodables -- " + explodables.length);
-			
 			for (explodable in explodables) {
 				var exComp:ExplodableComp = explodable.comp(ExplodableComp);
 				if (!exComp.blownUp && !exComp.safe) { // alive and NOT safe yet
@@ -74,6 +73,10 @@ class UpdateExplodablesSystem extends Sys
 		
 		if (ew.hasComponent(SpriteComp)) {
 			ew.comp(SpriteComp).setCurrentState("dead");
+		}
+		
+		if (ew.hasComponent(RescuableComponent)) {
+			_systemComp.playersDead++;
 		}
 	}
 }

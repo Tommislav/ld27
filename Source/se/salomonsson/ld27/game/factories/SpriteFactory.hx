@@ -2,6 +2,7 @@ package se.salomonsson.ld27.game.factories;
 import se.salomonsson.ld27.game.comp.BombComponent;
 import se.salomonsson.ld27.game.comp.ExplodableComp;
 import se.salomonsson.ld27.game.comp.PosComp;
+import se.salomonsson.ld27.game.comp.RescuableComponent;
 import se.salomonsson.ld27.game.comp.SelectableComp;
 import se.salomonsson.ld27.game.comp.SpriteCollisionComponent;
 import se.salomonsson.ld27.game.comp.SpriteComp;
@@ -34,12 +35,14 @@ class SpriteFactory
 		var pos:PosComp = new PosComp().init(sel.currentTileX * 64, sel.currentTileY * 64, 64, 64);
 		
 		var explodable:ExplodableComp = new ExplodableComp();
+		var rescuable:RescuableComponent = new RescuableComponent();
 		
 		em.allocateEntity()
 			.addComponent(sprite)
 			.addComponent(pos)
 			.addComponent(sel)
-			.addComponent(explodable);
+			.addComponent(explodable)
+			.addComponent(rescuable);
 	}
 	
 	

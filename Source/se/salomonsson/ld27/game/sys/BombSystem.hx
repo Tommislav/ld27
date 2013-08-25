@@ -93,7 +93,6 @@ class BombSystem extends Sys
 			if (_sys.timeLeft < 0) {
 				// BOOM
 				dispatch(new GameEvent(GameEvent.BOMB_EXPLODE));
-				GameConsole.log("BOOM!!!");
 			}
 		}
 		_lastTick = now;
@@ -108,6 +107,7 @@ class BombSystem extends Sys
 	{
 		// We don't need to count down anymore
 		_sys.bombHasExploded = true;
+		GameConsole.log("BOOM!!!");
 	}
 	
 	public function debugExplodeBomb():Void {
