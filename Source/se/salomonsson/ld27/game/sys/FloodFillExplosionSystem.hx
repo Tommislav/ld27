@@ -63,6 +63,9 @@ class FloodFillExplosionSystem extends Sys
 	{
 		_active = true;
 		
+		if (_level.map == null)
+			return;
+		
 		// Init bloom lookup array
 		var w = _level.map.width;
 		var h = _level.map.height;

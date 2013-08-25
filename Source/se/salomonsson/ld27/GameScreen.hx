@@ -7,6 +7,7 @@ import se.salomonsson.ld27.game.comp.CameraComp;
 import se.salomonsson.ld27.game.comp.LevelComp;
 import se.salomonsson.ld27.game.comp.SystemComp;
 import se.salomonsson.ld27.game.comp.TouchComp;
+import se.salomonsson.ld27.game.event.InitGameEvent;
 import se.salomonsson.ld27.game.event.StartNewLevelEvent;
 import se.salomonsson.ld27.game.factories.TileSheetFactory;
 import se.salomonsson.ld27.game.sys.BombSystem;
@@ -60,11 +61,11 @@ class GameScreen extends Sprite
 		_core.addSystem(new UpdateFloorRenderDataSystem(), 2);
 		_core.addSystem(new UpdateExplodablesSystem(), 2);
 		
-		_core.addSystem(new ScreenSystem(), 1);
+		_core.addSystem(new ScreenSystem(graphics), 1);
 		_core.addSystem(new LD27RenderSystem(graphics), 1);
 		
 		
-		_core.dispatch(new StartNewLevelEvent(StartNewLevelEvent.NEW_LEVEL, 1));
+		_core.dispatch(new InitGameEvent(InitGameEvent.INIT, 1));
 		
 		addEventListener(Event.ENTER_FRAME, onEF);
 	}

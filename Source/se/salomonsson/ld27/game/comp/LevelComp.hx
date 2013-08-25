@@ -13,6 +13,7 @@ class LevelComp implements IComponent
 	public var map:PixelMapParser;
 	public var floor:PixelMapParser;
 	public var sheet:TilesheetEx;
+	public var name:String;
 	
 	public function new() {}
 }

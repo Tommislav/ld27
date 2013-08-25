@@ -3,6 +3,7 @@ package se.salomonsson.ld27.game.sys;
 import flash.display.Bitmap;
 import flash.display.BitmapData;
 import flash.display.DisplayObject;
+import flash.display.Graphics;
 import flash.display.Sprite;
 import flash.Lib;
 import flash.text.TextField;
@@ -12,7 +13,9 @@ import openfl.Assets;
 import pgr.gconsole.GameConsole;
 import se.salomonsson.ld27.game.comp.SystemComp;
 import se.salomonsson.ld27.game.event.GameEvent;
+import se.salomonsson.ld27.game.event.PrepareNewLevelEvent;
 import se.salomonsson.seagal.core.Sys;
+import se.salomonsson.seagal.screen.ShowBitmapScreen;
 
 /**
  * ...
@@ -23,20 +26,28 @@ class ScreenSystem extends Sys
 
 	private var _currentScreen:DisplayObject;
 	private var _sysComp:SystemComp;
+	var _canvas:Graphics;
 	
-	public function new() { super(); }
+	public function new(canvas:Graphics) { 
+		super(); 
+		_canvas = canvas;
+	}
 	
 	override public function onAdded(sm, em):Void 
 	{
 		super.onAdded(sm, em);
 		_sysComp = em.getComp(SystemComp);
 		addListener(GameEvent.GAME_OVER, onGameOver);
+		addListener(PrepareNewLevelEvent.PREPARE, checkTutorialScreen);
 	}
+	
+	
 	
 	override public function onRemoved():Void 
 	{
 		super.onRemoved();
 		removeListener(GameEvent.GAME_OVER, onGameOver);
+		removeListener(PrepareNewLevelEvent.PREPARE, checkTutorialScreen);
 	}
 	
 	private function onGameOver(e:GameEvent):Void 
@@ -85,5 +96,35 @@ class ScreenSystem extends Sys
 	}
 	
 	
+	
+	
+	private function checkTutorialScreen(e:PrepareNewLevelEvent):Void 
+	{
+		var num:Int = e.levelNum;
+		var tutorialScreens:Array<String> = ["", 
+			"assets/screen_tut01.png",
+			"assets/screen_tut02.png"
+			];
+		
+		GameConsole.log("Check for tutorial screen " + num);
+		
+		if (num < tutorialScreens.length) {
+			var screenName = tutorialScreens[num];
+			GameConsole.log("SHOW screen with id " + screenName);
+			
+			if (screenName != "") {
+				getManager().pause();
+				
+				_canvas.clear();
+				
+				var screen:ShowBitmapScreen = new ShowBitmapScreen(screenName, 5000, true).setFadeTimeSeconds(2);
+				screen.show(tutorialComplete);
+			}
+		}
+	}
+	
+	private function tutorialComplete():Void {
+		getManager().resume();
+	}
 	
 }

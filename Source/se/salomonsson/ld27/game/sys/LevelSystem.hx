@@ -8,6 +8,8 @@ import se.salomonsson.ld27.game.comp.CameraComp;
 import se.salomonsson.ld27.game.comp.LevelComp;
 import se.salomonsson.ld27.game.comp.SystemComp;
 import se.salomonsson.ld27.game.event.GameEvent;
+import se.salomonsson.ld27.game.event.InitGameEvent;
+import se.salomonsson.ld27.game.event.PrepareNewLevelEvent;
 import se.salomonsson.ld27.game.event.StartNewLevelEvent;
 import se.salomonsson.ld27.game.factories.SpriteFactory;
 import se.salomonsson.ld27.game.factories.TileSheetFactory;
@@ -30,11 +32,23 @@ class LevelSystem extends Sys
 	override public function onAdded(sm, em):Void 
 	{
 		super.onAdded(sm, em);
+		
+		addListener(InitGameEvent.INIT, startup);
 		addListener(StartNewLevelEvent.NEW_LEVEL, onStartNewLevel);
 		addListener(GameEvent.LEVEL_EXIT, onExitLevel);
 		
 		_systemComp = em.getComp(SystemComp);
 		_levelComp = em.getComp(LevelComp);
+	}
+	
+	
+	// OUCH - Hacky! Ugly! Well...
+	private function startup(e:InitGameEvent):Void 
+	{
+		removeListener(InitGameEvent.INIT, startup);
+		_levelRunning = false;
+		_nextLevelCountdown = 0;
+		_delayAction = "prepareNextLevel";
 	}
 	
 	private function onStartNewLevel(e:StartNewLevelEvent):Void 
@@ -74,6 +88,14 @@ class LevelSystem extends Sys
 			
 			case 3:
 				_levelComp.map = new PixelMapParser(Assets.getBitmapData("assets/level3.png"));
+				_levelComp.floor = createFloor(_levelComp.map);
+				SpriteFactory.bombSprite(em(), 6, 8);
+				SpriteFactory.exitSprite(em(), 8, 12);
+				SpriteFactory.heroSprite(em(), 5, 8);
+				centerCamera(camera, 5, 8);
+			
+			case 4:
+				_levelComp.map = new PixelMapParser(Assets.getBitmapData("assets/level4.png"));
 				_levelComp.floor = createFloor(_levelComp.map);
 				SpriteFactory.bombSprite(em(), 7, 3);
 				SpriteFactory.exitSprite(em(), 14, 17);
@@ -140,7 +162,7 @@ class LevelSystem extends Sys
 			}
 			
 			if (levelCompleted) {
-				_delayAction = "nextLevel";
+				_delayAction = "prepareNextLevel";
 				dispatch(new GameEvent(GameEvent.LEVEL_EXIT));
 			}
 			
@@ -153,10 +175,17 @@ class LevelSystem extends Sys
 		} else {
 			if (--_nextLevelCountdown <= 0) {
 				
-				if (_delayAction == "nextLevel") {
+				if (_delayAction == "prepareNextLevel") {
+					_delayAction = "nextLevel";
+					_nextLevelCountdown = 1;
+					dispatch(new PrepareNewLevelEvent(PrepareNewLevelEvent.PREPARE, (_levelComp.levelId + 1)));
+					return;
+					
+				} else if(_delayAction == "nextLevel") {
 					// start next level (here we'll probably want to show a hint or something)
 					var nextLevelId:Int = _levelComp.levelId + 1;
 					dispatch(new StartNewLevelEvent(StartNewLevelEvent.NEW_LEVEL, nextLevelId));
+					
 				} else if (_delayAction == "gameOver") {
 					dispatch(new GameEvent(GameEvent.GAME_OVER));
 				}
