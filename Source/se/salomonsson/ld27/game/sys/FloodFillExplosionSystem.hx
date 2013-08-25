@@ -3,6 +3,8 @@ package se.salomonsson.ld27.game.sys;
 import se.salomonsson.ld27.game.comp.BombComponent;
 import se.salomonsson.ld27.game.comp.LevelComp;
 import se.salomonsson.ld27.game.comp.PosComp;
+import se.salomonsson.ld27.game.comp.SelectableComp;
+import se.salomonsson.ld27.game.comp.SystemComp;
 import se.salomonsson.ld27.game.comp.TouchComp;
 import se.salomonsson.ld27.game.event.GameEvent;
 import se.salomonsson.ld27.game.FloodFillNode;
@@ -26,6 +28,8 @@ class FloodFillExplosionSystem extends Sys
 	private var _nodeGrid:Array<Array<FloodFillNode>>;
 	private var _currentNodes:Array<FloodFillNode>;
 	
+	private var _playerBlobs:Array<SelectableComp>;
+	
 	
 	public function new() { super(); }
 
@@ -38,6 +42,8 @@ class FloodFillExplosionSystem extends Sys
 		
 		_level = em.getComp(LevelComp);
 		_touch = em.getComp(TouchComp);
+		
+		_playerBlobs = new Array<SelectableComp>();
 	}
 	
 	override public function onRemoved():Void 
@@ -51,6 +57,7 @@ class FloodFillExplosionSystem extends Sys
 	private function onStart(e:GameEvent):Void 
 	{
 		_active = false;
+		_playerBlobs = new Array<SelectableComp>();
 	}
 	
 	private function onExit(e:GameEvent):Void 
@@ -96,22 +103,27 @@ class FloodFillExplosionSystem extends Sys
 				_cnt = FLOOD_FILL_DELAY;
 				
 				if (_currentNodes.length == 0) {
-					SLogger.log(this, "Flood Fill Complete!");
+					em().getComp(SystemComp).bombFloodFillCompleted = true;
 					_active = false;
 					return;
 				}
+				
+				_playerBlobs = em().getComponents(SelectableComp);
 				
 				// bloom
 				var newNodes:Array<FloodFillNode> = new Array<FloodFillNode>();
 				
 				for (node in _currentNodes) {
-					addNode(node.x, node.y - 1, newNodes);
-					addNode(node.x, node.y + 1, newNodes);
-					addNode(node.x - 1, node.y, newNodes);
-					addNode(node.x + 1, node.y, newNodes);
+					if (!node.isFinal) {
+						addNode(node.x, node.y - 1, newNodes);
+						addNode(node.x, node.y + 1, newNodes);
+						addNode(node.x - 1, node.y, newNodes);
+						addNode(node.x + 1, node.y, newNodes);
+					}
 				}
 				
 				_currentNodes = newNodes;
+				_playerBlobs = new Array<SelectableComp>();
 			}
 		}
 	}
@@ -122,9 +134,23 @@ class FloodFillExplosionSystem extends Sys
 		
 		if (node != null) {
 			
+			if (playerAtPos(x, y)) {
+				node.isFinal = true; // Don't spread from this node
+			}
+			
 			floodNode(node);
 			addTo.push(node);
 		}
+	}
+	
+	private function playerAtPos(x:Int, y:Int):Bool
+	{
+		for (sel in _playerBlobs) {
+			if (sel.currentTileX == x && sel.currentTileY == y) {
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	private function getNode(x:Int, y:Int) {

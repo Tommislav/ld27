@@ -14,6 +14,7 @@ class FloodFillNode
 	//public var E:FloodFillNode;
 	
 	public var filled:Bool;
+	public var isFinal:Bool;
 	
 	public var x:Int;
 	public var y:Int;

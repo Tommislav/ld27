@@ -116,7 +116,10 @@ class ScreenSystem extends Sys
 		var num:Int = e.levelNum;
 		var tutorialScreens:Array<String> = ["", 
 			"assets/screen_tut01.png",
-			"assets/screen_tut02.png"
+			"assets/screen_tut02.png",
+			"",
+			"",
+			"assets/screens_tutSacrifice.png"
 			];
 		
 		SLogger.log(this, "Check for tutorial screen " + num);

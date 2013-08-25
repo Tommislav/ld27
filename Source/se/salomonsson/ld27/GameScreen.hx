@@ -8,7 +8,6 @@ import se.salomonsson.ld27.game.comp.LevelComp;
 import se.salomonsson.ld27.game.comp.SystemComp;
 import se.salomonsson.ld27.game.comp.TouchComp;
 import se.salomonsson.ld27.game.event.InitGameEvent;
-import se.salomonsson.ld27.game.event.StartNewLevelEvent;
 import se.salomonsson.ld27.game.factories.TileSheetFactory;
 import se.salomonsson.ld27.game.sys.BombSystem;
 import se.salomonsson.ld27.game.sys.FloodFillExplosionSystem;
@@ -18,9 +17,7 @@ import se.salomonsson.ld27.game.sys.LevelSystem;
 import se.salomonsson.ld27.game.sys.MoveSelectableObjectsSystem;
 import se.salomonsson.ld27.game.sys.ScreenSystem;
 import se.salomonsson.ld27.game.sys.ScrollSystem;
-import se.salomonsson.ld27.game.sys.SoundSys;
 import se.salomonsson.ld27.game.sys.TouchSystem;
-import se.salomonsson.ld27.game.sys.UpdateExplodablesSystem;
 import se.salomonsson.ld27.game.sys.UpdateExplodablesSystem;
 import se.salomonsson.ld27.game.sys.UpdateFloorRenderDataSystem;
 import se.salomonsson.seagal.core.Core;
@@ -57,7 +54,6 @@ class GameScreen extends Sprite
 		
 		_core.addSystem(new MoveSelectableObjectsSystem(), 3);
 		_core.addSystem(new FloodFillExplosionSystem(), 3);
-		_core.addSystem(new SoundSys(), 3);
 		
 		_core.addSystem(new ScrollSystem(), 2);
 		_core.addSystem(new UpdateFloorRenderDataSystem(), 2);

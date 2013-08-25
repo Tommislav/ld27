@@ -70,6 +70,9 @@ class LevelSystem extends Sys
 		_systemComp.playersRescued = 0;
 		_systemComp.playersRescueThreshold = 0;
 		
+		_systemComp.bombHasExploded = false;
+		_systemComp.bombFloodFillCompleted = false;
+		
 		
 		
 		var success:Bool = true;
@@ -78,7 +81,10 @@ class LevelSystem extends Sys
 			"assets/level2.png",
 			"assets/level3.png",
 			"assets/level4.png",
-			"assets/level5.png"
+			"assets/level5.png",
+			"assets/level6.png",
+			"assets/level7.png",
+			"assets/level8.png"
 		];
 		
 		
@@ -102,13 +108,6 @@ class LevelSystem extends Sys
 				centerCamera(camera, 6, 8);
 			
 			case 3:
-				_levelComp.name = "Fire run";
-				SpriteFactory.bombSprite(em(), 6, 8);
-				SpriteFactory.exitSprite(em(), 8, 12);
-				SpriteFactory.heroSprite(em(), 5, 8);
-				centerCamera(camera, 5, 8);
-			
-			case 4:
 				_levelComp.name = "Brothers";
 				SpriteFactory.bombSprite(em(), 7, 3);
 				SpriteFactory.exitSprite(em(), 14, 17);
@@ -117,7 +116,31 @@ class LevelSystem extends Sys
 				SpriteFactory.heroSprite(em(), 8, 3);
 				centerCamera(camera, 7, 3);
 			
+			case 4:
+				_levelComp.name = "Fire run";
+				SpriteFactory.bombSprite(em(), 6, 8);
+				SpriteFactory.exitSprite(em(), 8, 12);
+				SpriteFactory.heroSprite(em(), 5, 8);
+				centerCamera(camera, 5, 8);
+			
 			case 5:
+				_levelComp.name = "For the greater good";
+				
+				SpriteFactory.bombSprite(em(), 2, 5);
+				SpriteFactory.bombSprite(em(), 2, 7);
+				SpriteFactory.bombSprite(em(), 2, 11);
+				SpriteFactory.bombSprite(em(), 2, 13);
+				
+				SpriteFactory.heroSprite(em(), 3, 5);
+				SpriteFactory.heroSprite(em(), 3, 7);
+				SpriteFactory.heroSprite(em(), 3, 11);
+				SpriteFactory.heroSprite(em(), 3, 13);
+				
+				_systemComp.playersRescueThreshold = 3; // We can sacrifice one!
+				
+				centerCamera(camera, 3, 9);
+				
+			case 6:
 				_levelComp.name = "Multitasking";
 				SpriteFactory.bombSprite(em(), 11, 9);
 				
@@ -133,6 +156,41 @@ class LevelSystem extends Sys
 				SpriteFactory.heroSprite(em(), 11,11);
 				
 				centerCamera(camera, 11, 9);
+			
+			case 7:
+				_levelComp.name = "Double run";
+				SpriteFactory.bombSprite(em(), 1, 8);
+				SpriteFactory.bombSprite(em(), 1, 10);
+				
+				SpriteFactory.exitSprite(em(), 18, 8);
+				SpriteFactory.exitSprite(em(), 18, 12);
+				
+				SpriteFactory.heroSprite(em(), 2, 8);
+				SpriteFactory.heroSprite(em(), 2, 10);
+				
+				centerCamera(camera, 2, 9);
+				
+			case 8:
+				_levelComp.name = "Random find";
+				SpriteFactory.bombSprite(em(), 3, 8);
+				SpriteFactory.bombSprite(em(), 25, 18);
+				
+				SpriteFactory.exitSprite(em(), 2,10);
+				SpriteFactory.exitSprite(em(), 2,13);
+				SpriteFactory.exitSprite(em(), 2,16);
+				SpriteFactory.exitSprite(em(), 26,10);
+				SpriteFactory.exitSprite(em(), 26,13);
+				SpriteFactory.exitSprite(em(), 26,16);
+				
+				var randX:Int = 0;
+				var randY:Int = 0;
+				for (i in 0...6) {
+					randX = Std.int( Math.round(Math.random() * 18) + 5 );
+					randY = Std.int( Math.round(Math.random() * 18) + 5 );
+					SpriteFactory.heroSprite(em(), randX, randY);
+				}
+				
+				centerCamera(camera, randX, randY);
 			
 			default:
 				success = false;
@@ -193,8 +251,26 @@ class LevelSystem extends Sys
 	override public function tick(gt:GameTime):Void 
 	{
 		if (_levelRunning) {
-			var gameOver:Bool = checkIfGameOver();
-			var levelCompleted:Bool = checkIfLevelCompleted();
+			var gameOver:Bool = false;
+			var levelCompleted:Bool = false;
+			
+			var allPlayersGone:Bool = _systemComp.playersDead + _systemComp.playersRescued == _systemComp.numPlayers;
+			var bombDone:Bool = _systemComp.bombFloodFillCompleted;
+			
+			if (bombDone) {
+				var playersAlive:Int = _systemComp.numPlayers - _systemComp.playersDead;
+				if (playersAlive >= _systemComp.playersRescueThreshold) {
+					levelCompleted = true;
+				} else {
+					gameOver = true;
+				}
+			}else if (allPlayersGone) {
+				if (_systemComp.playersRescued >= _systemComp.playersRescueThreshold) {
+					levelCompleted = true;
+				} else {
+					gameOver = true;
+				}
+			}
 			
 			
 			if (gameOver) {
@@ -241,33 +317,9 @@ class LevelSystem extends Sys
 				_delayAction = "";
 			}
 		}
-		
-		
-		
-		
 	}
 	
-	function checkIfGameOver():Bool
-	{
-		if (_systemComp.playersDead + _systemComp.playersRescued == _systemComp.numPlayers) {
-			// All players are dead or rescued...
-			if (_systemComp.playersRescued < _systemComp.playersRescueThreshold) {
-				return true;
-			}
-		}
-		return false;
-	}
 	
-	function checkIfLevelCompleted() 
-	{
-		if (_systemComp.playersDead + _systemComp.playersRescued == _systemComp.numPlayers) {
-			// All players are dead or rescued...
-			if (_systemComp.playersRescued >= _systemComp.playersRescueThreshold) {
-				return true;
-			}
-		}
-		return false;
-	}
 	
 	public function debugStartLevel(levelId:Int):Void {
 		SLogger.log(this, "--DEBUG STARTING LEVEL " + levelId);

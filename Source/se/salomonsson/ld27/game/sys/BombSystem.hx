@@ -33,7 +33,10 @@ class BombSystem extends Sys
 		_tf.selectable = false;
 		_tf.background = true;
 		_tf.autoSize = TextFieldAutoSize.LEFT;
-		Lib.current.stage.addChild(_tf);
+		
+		#if debug
+			Lib.current.stage.addChild(_tf);
+		#end
 		
 	}
 	
