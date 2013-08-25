@@ -52,6 +52,7 @@ class LevelSystem extends Sys
 		_levelRunning = false;
 		_nextLevelCountdown = 0;
 		_delayAction = "prepareNextLevel";
+		_levelComp.levelId = e.startLevel - 1;
 	}
 	
 	private function onStartNewLevel(e:StartNewLevelEvent):Void 
@@ -76,7 +77,8 @@ class LevelSystem extends Sys
 			"assets/level1.png",
 			"assets/level2.png",
 			"assets/level3.png",
-			"assets/level4.png"
+			"assets/level4.png",
+			"assets/level5.png"
 		];
 		
 		
@@ -87,29 +89,50 @@ class LevelSystem extends Sys
 		
 		switch(levelNum) {
 			case 1:
+				_levelComp.name = "Chill";
 				SpriteFactory.exitSprite(em(), 16, 11);
 				SpriteFactory.heroSprite(em(), 9, 9);
 				centerCamera(camera, 9, 9);
 			
 			case 2:
+				_levelComp.name = "Bomb?";
 				SpriteFactory.bombSprite(em(), 5, 8);
 				SpriteFactory.exitSprite(em(), 20, 10);
 				SpriteFactory.heroSprite(em(), 6, 8);
 				centerCamera(camera, 6, 8);
 			
 			case 3:
+				_levelComp.name = "Fire run";
 				SpriteFactory.bombSprite(em(), 6, 8);
 				SpriteFactory.exitSprite(em(), 8, 12);
 				SpriteFactory.heroSprite(em(), 5, 8);
 				centerCamera(camera, 5, 8);
 			
 			case 4:
+				_levelComp.name = "Brothers";
 				SpriteFactory.bombSprite(em(), 7, 3);
 				SpriteFactory.exitSprite(em(), 14, 17);
 				SpriteFactory.exitSprite(em(), 18, 17);
 				SpriteFactory.heroSprite(em(), 6, 3);
 				SpriteFactory.heroSprite(em(), 8, 3);
 				centerCamera(camera, 7, 3);
+			
+			case 5:
+				_levelComp.name = "Multitasking";
+				SpriteFactory.bombSprite(em(), 11, 9);
+				
+				SpriteFactory.exitSprite(em(), 6,6);
+				SpriteFactory.exitSprite(em(), 6,18);
+				SpriteFactory.exitSprite(em(), 11,3);
+				SpriteFactory.exitSprite(em(), 16,12);
+				
+				
+				SpriteFactory.heroSprite(em(), 11,7);
+				SpriteFactory.heroSprite(em(), 9,9);
+				SpriteFactory.heroSprite(em(), 13,9);
+				SpriteFactory.heroSprite(em(), 11,11);
+				
+				centerCamera(camera, 11, 9);
 			
 			default:
 				success = false;
