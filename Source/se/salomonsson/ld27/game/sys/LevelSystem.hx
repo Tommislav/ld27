@@ -187,7 +187,16 @@ class LevelSystem extends Sys
 					dispatch(new StartNewLevelEvent(StartNewLevelEvent.NEW_LEVEL, nextLevelId));
 					
 				} else if (_delayAction == "gameOver") {
-					dispatch(new GameEvent(GameEvent.GAME_OVER));
+					
+					var lives:Int = _systemComp.lives - 1;
+					if (lives >= 0) {
+						_systemComp.lives--;
+						GameConsole.log("Number of lives: " + _systemComp.lives);
+						dispatch(new GameEvent(GameEvent.LEVEL_EXIT));
+						dispatch(new StartNewLevelEvent(StartNewLevelEvent.NEW_LEVEL, _levelComp.levelId)); // restart same level
+					} else {
+						dispatch(new GameEvent(GameEvent.GAME_OVER));
+					}
 				}
 				_delayAction = "";
 			}

@@ -13,6 +13,8 @@ class SystemComp implements IComponent
 	public var tileW:Int;
 	public var tileH:Int;
 	
+	public var lives:Int;
+	
 	public var timeLeft:Int;
 	
 	public var numPlayers:Int;
@@ -23,6 +25,9 @@ class SystemComp implements IComponent
 	public var bombHasExploded:Bool;
 	public var bombFloodFillCompleted:Bool;
 	
-	public function new() {}
+	public function new() 
+	{
+		lives = 3;
+	}
 	
 }
