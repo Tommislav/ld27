@@ -34,28 +34,37 @@ class TileSheetFactory
 	public static inline var EXIT_3 = 11;
 	public static inline var EXIT_4 = 12;
 	
+	public static inline var EXPLOSION_1 = 13;
+	public static inline var EXPLOSION_2 = 14;
+	public static inline var EXPLOSION_3 = 15;
+	public static inline var EXPLOSION_4 = 16;
+	public static var EXPLOSION:Array<Int> = [EXPLOSION_1, EXPLOSION_2, EXPLOSION_3, EXPLOSION_4];
+	
 	
 	public static function buildTileSheet(bd:BitmapData):TilesheetEx {
 		var sheet:TilesheetEx = new TilesheetEx(bd);
 		
-		sheet.addTileRect(tileRect(0, 0));		// floor
-		sheet.addTileRect(tileRect(0, 1));		// path
-		sheet.addTileRect(tileRect(0, 2));		// invalid
+		sheet.addTileRect(tileRect(0, 0));	// floor
+		sheet.addTileRect(tileRect(0, 1));	// path
+		sheet.addTileRect(tileRect(0, 2));	// invalid
 		
-		sheet.addTileRect(tileRect(1, 0));		// stone
-		sheet.addTileRect(tileRect(4, 0)); 		// player
-		sheet.addTileRect(tileRect(4, 1)); 		// player_exit
+		sheet.addTileRect(tileRect(1, 0));	// stone
+		sheet.addTileRect(tileRect(4, 0)); 	// player
+		sheet.addTileRect(tileRect(4, 1)); 	// player_exit
 		
-		sheet.addTileRect(tileRect(5, 0)); // bomb1
-		sheet.addTileRect(tileRect(5, 1)); // bomb2
-		sheet.addTileRect(tileRect(5, 2)); // bomb3
+		sheet.addTileRect(tileRect(5, 0)); 	// bomb1
+		sheet.addTileRect(tileRect(5, 1)); 	// bomb2
+		sheet.addTileRect(tileRect(5, 2)); 	// bomb3
 		
-		sheet.addTileRect(tileRect(6, 0)); // exit1
-		sheet.addTileRect(tileRect(6, 1)); // exit2
-		sheet.addTileRect(tileRect(6, 2)); // exit3
-		sheet.addTileRect(tileRect(6, 3)); // exit4
+		sheet.addTileRect(tileRect(6, 0)); 	// exit1
+		sheet.addTileRect(tileRect(6, 1)); 	// exit2
+		sheet.addTileRect(tileRect(6, 2)); 	// exit3
+		sheet.addTileRect(tileRect(6, 3)); 	// exit4
 		
-		
+		sheet.addTileRect(tileRect(5, 3));	// explosion 1
+		sheet.addTileRect(tileRect(5, 4));	// explosion 2
+		sheet.addTileRect(tileRect(5, 5));	// explosion 3
+		sheet.addTileRect(tileRect(5, 6));	// explosion 4
 		
 		
 		return sheet;

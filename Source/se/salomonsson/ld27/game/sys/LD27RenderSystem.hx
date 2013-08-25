@@ -46,6 +46,8 @@ class LD27RenderSystem extends Sys
 	private var _offX:Float;
 	private var _offY:Float;
 	
+	private var _explosionCount:Int;
+	
 	private var _tileArray:Array<Float>;
 	
 	
@@ -113,7 +115,9 @@ class LD27RenderSystem extends Sys
 		_tileArray = new Array<Float>();
 		
 		
-		
+		_explosionCount++;
+		if (_explosionCount > 3)
+			_explosionCount = 0;
 		
 		for (y in 0..._systemComp.tileH) {
 			for (x in 0..._systemComp.tileW) {
@@ -127,12 +131,15 @@ class LD27RenderSystem extends Sys
 				_tileArray.push(floorTile);
 				_tileArray.push(scale);
 				
-				if (tileValue == 0) {
-					// wall
+				if (tileValue == 0 || tileValue == 1) {
+					// wall or explosion
 					
 					_tileArray.push((x * 64) - _offX);
 					_tileArray.push((y * 64) - _offY);
-					_tileArray.push(TileSheetFactory.STONE);
+					
+					var id:Int = (tileValue == 0) ? TileSheetFactory.STONE : TileSheetFactory.EXPLOSION[_explosionCount];
+					_tileArray.push(id);
+					
 					_tileArray.push(scale);
 				}
 			}

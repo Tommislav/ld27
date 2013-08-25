@@ -69,11 +69,9 @@ class BombSystem extends Sys
 	override public function tick(gt:GameTime):Void 
 	{
 		if (!_touch.isTouching) {
-			if (_sys.bombHasExploded) {
-				floodfillFire();
-			} else {
+			if (!_sys.bombHasExploded) {
 				checkBombCountdown();
-			}	
+			}
 		} else {
 			_lastTick = -1;
 		}

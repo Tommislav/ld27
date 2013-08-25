@@ -10,6 +10,7 @@ import se.salomonsson.ld27.game.comp.TouchComp;
 import se.salomonsson.ld27.game.event.StartNewLevelEvent;
 import se.salomonsson.ld27.game.factories.TileSheetFactory;
 import se.salomonsson.ld27.game.sys.BombSystem;
+import se.salomonsson.ld27.game.sys.FloodFillExplosionSystem;
 import se.salomonsson.ld27.game.sys.HandleSelecatbleObjectsSystem;
 import se.salomonsson.ld27.game.sys.LD27RenderSystem;
 import se.salomonsson.ld27.game.sys.LevelSystem;
@@ -50,6 +51,7 @@ class GameScreen extends Sprite
 		_core.addSystem(new HandleSelecatbleObjectsSystem(), 4);
 		
 		_core.addSystem(new MoveSelectableObjectsSystem(), 3);
+		_core.addSystem(new FloodFillExplosionSystem(), 3);
 		
 		_core.addSystem(new ScrollSystem(), 2);
 		_core.addSystem(new UpdateFloorRenderDataSystem(), 2);
