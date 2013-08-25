@@ -1,9 +1,6 @@
 package se.salomonsson.ld27.game.sys;
 
-import flash.display.BitmapData;
 import flash.geom.Point;
-import pgr.gconsole.GameConsole;
-import se.salomonsson.game.utils.PixelMapParser;
 import se.salomonsson.ld27.game.comp.LevelComp;
 import se.salomonsson.ld27.game.comp.SelectableComp;
 import se.salomonsson.ld27.game.event.GameEvent;

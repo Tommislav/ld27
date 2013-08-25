@@ -1,5 +1,4 @@
 package se.salomonsson.ld27.game.comp;
-import pgr.gconsole.GameConsole;
 import se.salomonsson.seagal.core.IComponent;
 
 /**

@@ -10,11 +10,12 @@ import flash.text.TextField;
 import flash.text.TextFieldAutoSize;
 import flash.text.TextFormat;
 import openfl.Assets;
-import pgr.gconsole.GameConsole;
 import se.salomonsson.ld27.game.comp.SystemComp;
+import se.salomonsson.ld27.game.event.EndGameEvent;
 import se.salomonsson.ld27.game.event.GameEvent;
 import se.salomonsson.ld27.game.event.PrepareNewLevelEvent;
 import se.salomonsson.seagal.core.Sys;
+import se.salomonsson.seagal.debug.SLogger;
 import se.salomonsson.seagal.screen.ShowBitmapScreen;
 
 /**
@@ -39,6 +40,7 @@ class ScreenSystem extends Sys
 		_sysComp = em.getComp(SystemComp);
 		addListener(GameEvent.GAME_OVER, onGameOver);
 		addListener(PrepareNewLevelEvent.PREPARE, checkTutorialScreen);
+		addListener(EndGameEvent.GAME_ENDED, onGameEnded);
 	}
 	
 	
@@ -48,11 +50,22 @@ class ScreenSystem extends Sys
 		super.onRemoved();
 		removeListener(GameEvent.GAME_OVER, onGameOver);
 		removeListener(PrepareNewLevelEvent.PREPARE, checkTutorialScreen);
+		removeListener(EndGameEvent.GAME_ENDED, onGameEnded);
 	}
+	
+	private function onGameEnded(e:EndGameEvent):Void 
+	{
+		SLogger.log(this, "onGameEnded");
+		_canvas.clear();
+		var screen:ShowBitmapScreen = new ShowBitmapScreen("assets/screen_endscreen.png", 0, false);
+		screen.show(nothing);
+		getManager().pause();
+	}
+	private function nothing(){}
 	
 	private function onGameOver(e:GameEvent):Void 
 	{
-		GameConsole.log("GOT GAME OVER EVENT!");
+		SLogger.log(this, "GOT GAME OVER EVENT!");
 		var bd:BitmapData = Assets.getBitmapData("assets/gameover.png");
 		var bmp:Bitmap = new Bitmap(bd);
 		var holder:Sprite = new Sprite();
@@ -106,11 +119,11 @@ class ScreenSystem extends Sys
 			"assets/screen_tut02.png"
 			];
 		
-		GameConsole.log("Check for tutorial screen " + num);
+		SLogger.log(this, "Check for tutorial screen " + num);
 		
 		if (num < tutorialScreens.length) {
 			var screenName = tutorialScreens[num];
-			GameConsole.log("SHOW screen with id " + screenName);
+			SLogger.log(this, "SHOW screen with id " + screenName);
 			
 			if (screenName != "") {
 				getManager().pause();

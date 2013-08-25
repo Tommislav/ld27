@@ -1,14 +1,9 @@
 package se.salomonsson.ld27.game.sys;
 
 import flash.geom.Point;
-import pgr.gconsole.GameConsole;
-import se.salomonsson.ld27.game.comp.LevelComp;
 import se.salomonsson.ld27.game.comp.PosComp;
 import se.salomonsson.ld27.game.comp.SelectableComp;
-import se.salomonsson.ld27.game.comp.SpriteComp;
-import se.salomonsson.ld27.game.comp.SystemComp;
 import se.salomonsson.ld27.game.comp.TouchComp;
-import se.salomonsson.ld27.game.factories.TileSheetFactory;
 import se.salomonsson.seagal.core.EW;
 import se.salomonsson.seagal.core.GameTime;
 import se.salomonsson.seagal.core.Sys;

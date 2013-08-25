@@ -2,11 +2,11 @@ package se.salomonsson.ld27.game.sys;
 
 import flash.display.BitmapData;
 import openfl.Assets;
-import pgr.gconsole.GameConsole;
 import se.salomonsson.game.utils.PixelMapParser;
 import se.salomonsson.ld27.game.comp.CameraComp;
 import se.salomonsson.ld27.game.comp.LevelComp;
 import se.salomonsson.ld27.game.comp.SystemComp;
+import se.salomonsson.ld27.game.event.EndGameEvent;
 import se.salomonsson.ld27.game.event.GameEvent;
 import se.salomonsson.ld27.game.event.InitGameEvent;
 import se.salomonsson.ld27.game.event.PrepareNewLevelEvent;
@@ -15,6 +15,7 @@ import se.salomonsson.ld27.game.factories.SpriteFactory;
 import se.salomonsson.ld27.game.factories.TileSheetFactory;
 import se.salomonsson.seagal.core.GameTime;
 import se.salomonsson.seagal.core.Sys;
+import se.salomonsson.seagal.debug.SLogger;
 
 /**
  * ...
@@ -39,6 +40,8 @@ class LevelSystem extends Sys
 		
 		_systemComp = em.getComp(SystemComp);
 		_levelComp = em.getComp(LevelComp);
+		
+		SLogger.registerFunction(this, "debugStartLevel", "level" );
 	}
 	
 	
@@ -69,34 +72,38 @@ class LevelSystem extends Sys
 		
 		
 		var success:Bool = true;
+		var mapNames:Array<String> = [ "",
+			"assets/level1.png",
+			"assets/level2.png",
+			"assets/level3.png",
+			"assets/level4.png"
+		];
+		
+		
+		if (levelNum > 0 && levelNum < mapNames.length) {
+			_levelComp.map = new PixelMapParser(Assets.getBitmapData(mapNames[levelNum]));
+			_levelComp.floor = createFloor(_levelComp.map);
+		}
 		
 		switch(levelNum) {
 			case 1:
-				_levelComp.map = new PixelMapParser(Assets.getBitmapData("assets/level1.png"));
-				_levelComp.floor = createFloor(_levelComp.map);
 				SpriteFactory.exitSprite(em(), 16, 11);
 				SpriteFactory.heroSprite(em(), 9, 9);
 				centerCamera(camera, 9, 9);
 			
 			case 2:
-				_levelComp.map = new PixelMapParser(Assets.getBitmapData("assets/level2.png"));
-				_levelComp.floor = createFloor(_levelComp.map);
 				SpriteFactory.bombSprite(em(), 5, 8);
 				SpriteFactory.exitSprite(em(), 20, 10);
 				SpriteFactory.heroSprite(em(), 6, 8);
 				centerCamera(camera, 6, 8);
 			
 			case 3:
-				_levelComp.map = new PixelMapParser(Assets.getBitmapData("assets/level3.png"));
-				_levelComp.floor = createFloor(_levelComp.map);
 				SpriteFactory.bombSprite(em(), 6, 8);
 				SpriteFactory.exitSprite(em(), 8, 12);
 				SpriteFactory.heroSprite(em(), 5, 8);
 				centerCamera(camera, 5, 8);
 			
 			case 4:
-				_levelComp.map = new PixelMapParser(Assets.getBitmapData("assets/level4.png"));
-				_levelComp.floor = createFloor(_levelComp.map);
 				SpriteFactory.bombSprite(em(), 7, 3);
 				SpriteFactory.exitSprite(em(), 14, 17);
 				SpriteFactory.exitSprite(em(), 18, 17);
@@ -116,7 +123,10 @@ class LevelSystem extends Sys
 		if (success) {
 			dispatch(new GameEvent(GameEvent.LEVEL_START));
 		} else {
-			throw "Failed to initialize level " + levelNum;
+			
+			dispatch(new EndGameEvent(EndGameEvent.GAME_ENDED));
+			return;
+			
 		}
 	}
 	
@@ -144,6 +154,13 @@ class LevelSystem extends Sys
 		
 		cam.x = pX - (sys.vpWidth / 2);
 		cam.y = pY - (sys.vpHeight / 2);
+		
+		// lazy, only check bounds top and left...
+		if (cam.x < 0)
+			cam.x = 0;
+			
+		if (cam.y < 0)
+			cam.y = 0;
 	}
 	
 	
@@ -191,7 +208,7 @@ class LevelSystem extends Sys
 					var lives:Int = _systemComp.lives - 1;
 					if (lives >= 0) {
 						_systemComp.lives--;
-						GameConsole.log("Number of lives: " + _systemComp.lives);
+						SLogger.log(this, "Number of lives: " + _systemComp.lives);
 						dispatch(new GameEvent(GameEvent.LEVEL_EXIT));
 						dispatch(new StartNewLevelEvent(StartNewLevelEvent.NEW_LEVEL, _levelComp.levelId)); // restart same level
 					} else {
@@ -227,5 +244,12 @@ class LevelSystem extends Sys
 			}
 		}
 		return false;
+	}
+	
+	public function debugStartLevel(levelId:Int):Void {
+		SLogger.log(this, "--DEBUG STARTING LEVEL " + levelId);
+		dispatch(new GameEvent(GameEvent.LEVEL_EXIT));
+		_levelComp.levelId = levelId;
+		dispatch(new StartNewLevelEvent(StartNewLevelEvent.NEW_LEVEL, _levelComp.levelId));
 	}
 }

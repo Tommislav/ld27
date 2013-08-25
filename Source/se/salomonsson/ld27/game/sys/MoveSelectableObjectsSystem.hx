@@ -1,7 +1,6 @@
 package se.salomonsson.ld27.game.sys;
 
 import flash.geom.Point;
-import pgr.gconsole.GameConsole;
 import se.salomonsson.ld27.game.comp.ExplodableComp;
 import se.salomonsson.ld27.game.comp.LevelComp;
 import se.salomonsson.ld27.game.comp.PosComp;

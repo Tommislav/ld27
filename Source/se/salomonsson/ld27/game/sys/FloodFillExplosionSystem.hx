@@ -1,16 +1,15 @@
 package se.salomonsson.ld27.game.sys;
 
-import pgr.gconsole.GameConsole;
 import se.salomonsson.ld27.game.comp.BombComponent;
 import se.salomonsson.ld27.game.comp.LevelComp;
 import se.salomonsson.ld27.game.comp.PosComp;
 import se.salomonsson.ld27.game.comp.TouchComp;
 import se.salomonsson.ld27.game.event.GameEvent;
-import se.salomonsson.ld27.game.factories.TileSheetFactory;
 import se.salomonsson.ld27.game.FloodFillNode;
 import se.salomonsson.seagal.core.EW;
 import se.salomonsson.seagal.core.GameTime;
 import se.salomonsson.seagal.core.Sys;
+import se.salomonsson.seagal.debug.SLogger;
 
 /**
  * ...
@@ -97,7 +96,7 @@ class FloodFillExplosionSystem extends Sys
 				_cnt = FLOOD_FILL_DELAY;
 				
 				if (_currentNodes.length == 0) {
-					GameConsole.log("Flood Fill Complete!");
+					SLogger.log(this, "Flood Fill Complete!");
 					_active = false;
 					return;
 				}

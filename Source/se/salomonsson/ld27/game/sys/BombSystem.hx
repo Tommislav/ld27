@@ -1,15 +1,14 @@
 package se.salomonsson.ld27.game.sys;
 
-import flash.events.Event;
 import flash.Lib;
 import flash.text.TextField;
 import flash.text.TextFieldAutoSize;
-import pgr.gconsole.GameConsole;
-import se.salomonsson.ld27.game.event.GameEvent;
 import se.salomonsson.ld27.game.comp.SystemComp;
 import se.salomonsson.ld27.game.comp.TouchComp;
+import se.salomonsson.ld27.game.event.GameEvent;
 import se.salomonsson.seagal.core.GameTime;
 import se.salomonsson.seagal.core.Sys;
+import se.salomonsson.seagal.debug.SLogger;
 
 /**
  * ...
@@ -48,7 +47,7 @@ class BombSystem extends Sys
 		addListener(GameEvent.LEVEL_EXIT, onLevelExit);
 		addListener(GameEvent.BOMB_EXPLODE, onBombExplode);
 		
-		GameConsole.registerFunction(this, "debugExplodeBomb", "boom");
+		SLogger.registerFunction(this, "debugExplodeBomb", "boom");
 	}
 	
 	override public function onRemoved():Void 
@@ -107,7 +106,7 @@ class BombSystem extends Sys
 	{
 		// We don't need to count down anymore
 		_sys.bombHasExploded = true;
-		GameConsole.log("BOOM!!!");
+		SLogger.log(this, "BOOM!!!");
 	}
 	
 	public function debugExplodeBomb():Void {
