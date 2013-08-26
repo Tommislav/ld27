@@ -17,8 +17,6 @@
 	<!--<window orientation="portrait" vsync="true" antialiasing="0" />-->
 	
 	<source path="Source" />
-	<!-- TEMPORARY! -->
-	<source path="../seagal/src" />
 	
 	<haxelib name="openfl" />
 	<haxelib name="tilelayer" />
