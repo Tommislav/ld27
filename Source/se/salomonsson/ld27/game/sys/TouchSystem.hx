@@ -89,8 +89,8 @@ class TouchSystem extends Sys
 	private function onMove(e:MouseEvent):Void 
 	{
 		if (_down) {
-			_tX = Math.round(e.stageX);
-			_tY = Math.round(e.stageY);
+			_tX = Math.round(e.localX);
+			_tY = Math.round(e.localY);
 		}
 	}
 	

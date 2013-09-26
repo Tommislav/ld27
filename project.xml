@@ -14,7 +14,7 @@
 	
 	<window width="800" height="600" background="#FFFFFF" fps="60" if="flash"/>
 	<window background="#FFFFFF" fps="60" unless="flash"/>
-	<!--<window orientation="portrait" vsync="true" antialiasing="0" />-->
+	<window orientation="landscape" vsync="true" antialiasing="0" />
 	
 	<source path="Source" />
 	

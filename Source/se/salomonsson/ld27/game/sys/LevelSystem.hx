@@ -13,6 +13,7 @@ import se.salomonsson.ld27.game.event.PrepareNewLevelEvent;
 import se.salomonsson.ld27.game.event.StartNewLevelEvent;
 import se.salomonsson.ld27.game.factories.SpriteFactory;
 import se.salomonsson.ld27.game.factories.TileSheetFactory;
+import se.salomonsson.ld27.Stage;
 import se.salomonsson.seagal.core.GameTime;
 import se.salomonsson.seagal.core.Sys;
 import se.salomonsson.seagal.debug.SLogger;
@@ -230,8 +231,8 @@ class LevelSystem extends Sys
 	
 	private function centerCamera(cam:CameraComp, x:Int, y:Int) {
 		var sys:SystemComp = em().getComp(SystemComp);
-		var pX = x * 64;
-		var pY = y * 64;
+		var pX = x * 64 * Stage.stageScale;
+		var pY = y * 64 * Stage.stageScale;
 		
 		cam.x = pX - (sys.vpWidth / 2);
 		cam.y = pY - (sys.vpHeight / 2);

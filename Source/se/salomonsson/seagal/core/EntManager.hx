@@ -70,7 +70,7 @@ class EntManager
 	}
 	
 	
-	public function hasComponent(entity:Int, compClass:Dynamic):Bool {
+	public function hasComponent(entity:Int, compClass:Dynamic):Bool { // Remove dynamic?
 		var entHash = _entityHash[entity];
 		for (i in 0...entHash.length) {
 			if (Std.is(entHash[i], compClass))
@@ -80,18 +80,24 @@ class EntManager
 	}
 	
 	
-	public function getComponents<T>(componentClass:Class<T>):Array<T>
+	public function getComponents<T:IComponent>(componentClass:Class<T>):Array<T>
 	{
 		var ret:Array<T> = new Array<T>();
+		
 		var len:Int = _entities.length;
+		
 		for (i in 0...len)
 		{
 			var e:Int = _entities[i];
-			var entHash = _entityHash[e];
+			var entHash:Array<IComponent> = _entityHash[e];
 			for (j in 0...entHash.length)
 			{
-				if (Std.is(entHash[j], componentClass))
-					ret.push(cast entHash[j]);
+				if (Std.is(entHash[j], componentClass)) {
+					var comp = entHash[j];
+					ret.push( untyped __cpp__("comp->__GetRealObject()") );
+					//var comp = cast(entHash[j]);
+					//(untyped ret).push(entHash[j]);
+				}
 			}
 		}
 		

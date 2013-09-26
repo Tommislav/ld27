@@ -2,6 +2,7 @@ package se.salomonsson.ld27;
 
 
 import flash.display.Sprite;
+import flash.Lib;
 import openfl.Assets;
 import se.salomonsson.seagal.screen.ShowBitmapScreen;
 
@@ -15,6 +16,7 @@ class LD27 extends Sprite {
 	public function new () {
 		
 		super ();
+		Stage.setScale(2);
 		showSplashScreen();
 	}
 	

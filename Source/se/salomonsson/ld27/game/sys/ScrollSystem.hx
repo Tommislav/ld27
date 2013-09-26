@@ -3,6 +3,7 @@ import se.salomonsson.ld27.game.comp.CameraComp;
 import se.salomonsson.ld27.game.comp.LevelComp;
 import se.salomonsson.ld27.game.comp.SystemComp;
 import se.salomonsson.ld27.game.comp.TouchComp;
+import se.salomonsson.ld27.Stage;
 import se.salomonsson.seagal.core.GameTime;
 import se.salomonsson.seagal.core.Sys;
 
@@ -59,8 +60,8 @@ class ScrollSystem extends Sys
 			}
 			
 			if (_scrollX != 0 || _scrollY != 0) {
-				var maxX = _level.map.width * 64 - _sys.vpWidth;
-				var maxY = _level.map.height * 64 - _sys.vpHeight;
+				var maxX = (_level.map.width * 64  * Stage.stageScale - _sys.vpWidth);
+				var maxY = (_level.map.height * 64  * Stage.stageScale - _sys.vpHeight);
 				
 				_cam.x = clamp(_cam.x + _scrollX, 0, maxX);
 				_cam.y = clamp(_cam.y + _scrollY, 0, maxY);
