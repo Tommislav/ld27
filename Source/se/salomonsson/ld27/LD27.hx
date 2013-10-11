@@ -16,7 +16,7 @@ class LD27 extends Sprite {
 	public function new () {
 		
 		super ();
-		Stage.setScale(2);
+		Stage.setScale(1);
 		showSplashScreen();
 	}
 	
