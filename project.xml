@@ -16,12 +16,14 @@
 	<window background="#FFFFFF" fps="60" unless="flash"/>
 	<window orientation="landscape" vsync="true" antialiasing="0" />
 	
+	<set name="cpp" if="cpp" />
+	
 	<source path="Source" />
 	
-	<haxelib name="openfl" />
-	<haxelib name="tilelayer" />
-	<haxelib name="actuate" />
-	<haxelib name="gameconsole" />
+	<haxelib name="openfl" version="2.2.4" />
+	<haxelib name="tilelayer" version="0.2.0" />
+	<haxelib name="actuate" version="1.8.1" />
+	<haxelib name="gameconsole" version="3.1.3" />
 	
 	<assets path="Assets" rename="assets" exclude="openfl.svg" />
 	<icon path="Assets/openfl.svg" />

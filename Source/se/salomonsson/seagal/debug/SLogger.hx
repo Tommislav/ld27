@@ -1,14 +1,14 @@
 package se.salomonsson.seagal.debug;
 import flash.Lib;
-import pgr.gconsole.GameConsole;
 import pgr.gconsole.GCThemes;
+import pgr.gconsole.GC;
 
 /**
  * ...
  * @author Tommislav
  */
 class SLogger
-{
+{	
 	public static function log(obj:Dynamic, msg:String) {
 		#if debug
 			
@@ -20,20 +20,20 @@ class SLogger
 				className = Type.getClassName( Type.getClass(obj) );
 			}
 		
-			GameConsole.log(Lib.getTimer() + " " + className + " :: " + msg);
+			GC.log(Lib.getTimer() + " " + className + " :: " + msg);
 		#end
 	}
 	
 	public static function init() {
 		#if debug 
-			GameConsole.init(0.5, "DOWN", GCThemes.GREEN_THEME);
-			GameConsole.log("Seagal Enitity System...");
+			GC.init(0.5, "DOWN", GCThemes.DARK);
+			GC.log("Seagal Enitity System...");
 		#end
 	}
 	
 	public static function registerFunction(object:Dynamic, name:String, alias:String, ?monitor:Bool = false) {
 		#if debug 
-			GameConsole.registerFunction(object, name, alias, monitor);
+			GC.registerFunction(object, alias);
 		#end
 	}
 	

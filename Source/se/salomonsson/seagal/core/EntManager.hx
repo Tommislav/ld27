@@ -94,9 +94,13 @@ class EntManager
 			{
 				if (Std.is(entHash[j], componentClass)) {
 					var comp = entHash[j];
-					ret.push( untyped __cpp__("comp->__GetRealObject()") );
-					//var comp = cast(entHash[j]);
-					//(untyped ret).push(entHash[j]);
+					
+					#if cpp
+						ret.push( untyped __cpp__("comp->__GetRealObject()") );
+					#else
+						var comp = cast(entHash[j]);
+						(untyped ret).push(entHash[j]);
+					#end
 				}
 			}
 		}
