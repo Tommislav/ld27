@@ -1,3 +1,6 @@
 Export
 Assets/level.psd
 Assets/screens.psd
+.idea
+*.iml
+out

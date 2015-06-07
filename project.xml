@@ -20,7 +20,7 @@
 	
 	<source path="Source" />
 	
-	<haxelib name="openfl" version="2.2.4" />
+	<haxelib name="openfl" version="3.0.8" />
 	<haxelib name="tilelayer" version="0.2.0" />
 	<haxelib name="actuate" version="1.8.1" />
 	<haxelib name="gameconsole" version="3.1.3" />

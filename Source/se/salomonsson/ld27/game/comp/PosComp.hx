@@ -1,5 +1,4 @@
 package se.salomonsson.ld27.game.comp;
-import flash.events.FocusEvent;
 import se.salomonsson.seagal.core.IComponent;
 
 /**

@@ -70,8 +70,10 @@ class GameScreen extends Sprite
 	
 	private function getSystemComp() {
 		var sys:SystemComp = new SystemComp();
-		sys.vpWidth = Lib.current.stage.stageWidth;
-		sys.vpHeight = Lib.current.stage.stageHeight;
+		sys.vpWidth = Math.round(Lib.current.stage.stageWidth);
+		sys.vpHeight = Math.round(Lib.current.stage.stageHeight);
+		//this.scaleX = this.scaleY = Stage.stageScale;
+
 		sys.tileW = Math.ceil(sys.vpWidth / 64) + 1;
 		sys.tileH = Math.ceil(sys.vpHeight / 64) + 1;
 		return sys;

@@ -1,6 +1,5 @@
 package se.salomonsson.ld27.game.sys;
 
-import flash.display.BitmapData;
 import openfl.Assets;
 import se.salomonsson.game.utils.PixelMapParser;
 import se.salomonsson.ld27.game.comp.CameraComp;

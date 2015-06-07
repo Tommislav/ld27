@@ -1,4 +1,5 @@
 package se.salomonsson.ld27;
+import flash.display.StageScaleMode;
 import flash.Lib;
 
 /**
@@ -23,8 +24,18 @@ class Stage
 		stageScale = scale;
 		stageWidth = Lib.current.stage.stageWidth * scale;
 		stageHeight = Lib.current.stage.stageHeight * scale;
-		
+
 		Lib.current.scaleX = Lib.current.scaleY = scale;
+	}
+
+	public static function adjustScale(preferredWidth:Float, preferredHeight:Float) {
+		var actualW = Lib.current.stage.stageWidth;
+		var actualH = Lib.current.stage.stageHeight;
+		var sX = actualW / preferredWidth;
+		var sY = actualH / preferredHeight;
+		var scale = sX > sY ? sY : sX;
+		setScale(scale);
+
 	}
 	
 }

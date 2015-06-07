@@ -3,11 +3,6 @@ import aze.display.TileLayer;
 import aze.display.TilesheetEx;
 import aze.display.TileSprite;
 import flash.display.Graphics;
-import flash.geom.Point;
-import flash.geom.Rectangle;
-import haxe.macro.Expr.Var;
-import haxe.remoting.FlashJsConnection;
-import openfl.Assets;
 import openfl.display.Tilesheet;
 import se.salomonsson.game.utils.PixelMapParser;
 import se.salomonsson.ld27.game.comp.CameraComp;
@@ -17,7 +12,6 @@ import se.salomonsson.ld27.game.comp.SpriteComp;
 import se.salomonsson.ld27.game.comp.SystemComp;
 import se.salomonsson.ld27.game.comp.TouchComp;
 import se.salomonsson.ld27.game.event.GameEvent;
-import se.salomonsson.ld27.game.factories.SpriteFactory;
 import se.salomonsson.ld27.game.factories.TileSheetFactory;
 import se.salomonsson.seagal.core.EW;
 import se.salomonsson.seagal.core.GameTime;
@@ -114,11 +108,13 @@ class LD27RenderSystem extends Sys
 		
 		_tileArray = new Array<Float>();
 		
-		
-		_explosionCount++;
-		if (_explosionCount > 3)
-			_explosionCount = 0;
-		
+		if (!_touchComp.isTouching) {
+			_explosionCount++;
+			if (_explosionCount > 3) {
+				_explosionCount = 0;
+			}
+		}
+
 		for (y in 0..._systemComp.tileH) {
 			for (x in 0..._systemComp.tileW) {
 				
@@ -152,7 +148,14 @@ class LD27RenderSystem extends Sys
 			var spr:SpriteComp = ent.comp(SpriteComp);
 			_tileArray.push(pos.x-camX);
 			_tileArray.push(pos.y-camY);
-			_tileArray.push(spr.getCurrentFrame());
+
+			if (_touchComp.isTouching) {
+				_tileArray.push(spr.getCurrentFrame());
+			} else {
+				_tileArray.push(spr.getNextFrame());
+			}
+
+
 			_tileArray.push(scale);
 		}
 		

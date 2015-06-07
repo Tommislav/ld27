@@ -41,14 +41,23 @@ class SpriteComp implements IComponent
 		}
 		
 		var tiles:Array<Int> = states.get(currentState);
+		return tiles[currentFrame];
+	}
+
+	public function getNextFrame():Float {
+		if (!this.states.exists(currentState)) {
+			throw "Animation state'" + currentState + "' does not exist";
+		}
+
+		var tiles:Array<Int> = states.get(currentState);
 		var frame:Int = tiles[currentFrame];
-		
+
 		if (autoLoop) {
 			currentFrame++;
 			if (currentFrame > tiles.length-1)
 				currentFrame = 0;
 		}
-		
+
 		return frame;
 	}
 	
