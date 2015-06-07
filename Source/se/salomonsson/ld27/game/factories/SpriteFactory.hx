@@ -48,7 +48,42 @@ class SpriteFactory
 			.addComponent(explodable)
 			.addComponent(rescuable);
 	}
-	
+
+
+	public static function kingSprite(em:EntManager, x:Int, y:Int) {
+
+		em.getComp(SystemComp).numPlayers += 1;
+
+		var sprite:SpriteComp = new SpriteComp();
+		sprite.addState("default", [TileSheetFactory.KING_0]);
+		sprite.addState("up", [TileSheetFactory.KING_0]);
+		sprite.addState("down", [TileSheetFactory.KING_0]);
+		sprite.addState("left", [TileSheetFactory.KING_0]);
+		sprite.addState("right", [TileSheetFactory.KING_0]);
+		sprite.addState("exit", [TileSheetFactory.KING_0]);
+		sprite.addState("dead", [TileSheetFactory.KING_0]);
+
+		var sel:SelectableComp = new SelectableComp();
+		sel.currentTileX = x;
+		sel.currentTileY = y;
+		sel.speed = 1;
+
+		var pos:PosComp = new PosComp().init(sel.currentTileX * 64, sel.currentTileY * 64, 64, 64);
+
+		var explodable:ExplodableComp = new ExplodableComp();
+		var rescuable:RescuableComponent = new RescuableComponent();
+
+		em.allocateEntity()
+		.addComponent(sprite)
+		.addComponent(pos)
+		.addComponent(sel)
+		.addComponent(explodable)
+		.addComponent(rescuable);
+	}
+
+
+
+
 	
 	
 	public static function bombSprite(em:EntManager, x:Int, y:Int) {

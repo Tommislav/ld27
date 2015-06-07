@@ -16,6 +16,7 @@ class SelectableComp implements IComponent
 	public var selectedPath:Array<Point>;
 	public var moveToX:Float;
 	public var moveToY:Float;
+	public var speed:Float = 4.0;
 	
 	public function new() 
 	{

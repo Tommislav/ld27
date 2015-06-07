@@ -1,5 +1,6 @@
 package se.salomonsson.ld27.game.sys;
 
+import flash.display.BitmapData;
 import openfl.Assets;
 import se.salomonsson.game.utils.PixelMapParser;
 import se.salomonsson.ld27.game.comp.CameraComp;
@@ -98,6 +99,7 @@ class LevelSystem extends Sys
 				_levelComp.name = "Chill";
 				SpriteFactory.exitSprite(em(), 16, 11);
 				SpriteFactory.heroSprite(em(), 9, 9);
+				SpriteFactory.kingSprite(em(), 10, 10);
 				centerCamera(camera, 9, 9);
 			
 			case 2:

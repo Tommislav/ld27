@@ -66,12 +66,12 @@ class MoveSelectableObjectsSystem extends Sys
 					var currX = pos.x;
 					var currY = pos.y;
 					
-					var speed = 4;
+					var speed = sel.speed;
 					
 					var dX = (sel.moveToX - currX);
 					var dY = (sel.moveToY - currY);
-					var sX = 0;
-					var sY = 0;
+					var sX = 0.0;
+					var sY = 0.0;
 					
 					if (dX != 0)
 						sX = (dX > 0) ? speed : -speed;

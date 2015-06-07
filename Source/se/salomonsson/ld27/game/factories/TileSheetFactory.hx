@@ -28,7 +28,8 @@ class TileSheetFactory
 	public static inline var HERO_DOWN = 8;
 	public static inline var HERO_EXIT = 9;
 	public static inline var HERO_DEAD = 10;
-	
+
+
 	
 	
 	public static inline var BOMB_1 = 11;
@@ -44,7 +45,11 @@ class TileSheetFactory
 	public static inline var EXPLOSION_2 = 19;
 	public static inline var EXPLOSION_3 = 20;
 	public static inline var EXPLOSION_4 = 21 ;
-	
+
+
+	public static inline var KING_0 = 22;
+
+
 	
 	public static var EXPLOSION:Array<Int> = [EXPLOSION_1, EXPLOSION_2, EXPLOSION_3, EXPLOSION_4];
 	
@@ -79,7 +84,7 @@ class TileSheetFactory
 		sheet.addTileRect(tileRect(5, 5));	// explosion 3
 		sheet.addTileRect(tileRect(5, 6));	// explosion 4
 		
-		
+		sheet.addTileRect(tileRect(0, 3));
 		
 		return sheet;
 	}
@@ -92,7 +97,10 @@ class TileSheetFactory
 	private static function spriteRect(x, y):Rectangle {
 		return new Rectangle(x * 64, y * 64, SPRITE_WIDTH, SPRITE_HEIGHT);
 	}
-	
+
+	private static function customRect(x, y, w, h):Rectangle {
+		return new Rectangle(x * 64, y * 64, w, h);
+	}
 	
 	public function new() 
 	{
